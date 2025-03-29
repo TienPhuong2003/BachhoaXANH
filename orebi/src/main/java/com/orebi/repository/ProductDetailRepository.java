@@ -9,5 +9,5 @@ import com.orebi.entity.ProductDetail;
 
 @Repository
 public interface ProductDetailRepository extends JpaRepository<ProductDetail, Long> {
-    Optional<ProductDetail> findByProductProductId(Long productId);
+   
 }

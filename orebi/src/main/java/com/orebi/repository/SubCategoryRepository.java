@@ -9,12 +9,4 @@ import com.orebi.entity.SubCategory;
 
 @Repository
 public interface SubCategoryRepository extends JpaRepository<SubCategory, Long> {
-    // Tìm tất cả subcategories theo categoryId
-    List<SubCategory> findByCategoryCategoryId(Long categoryId);
-    
-    // Kiểm tra subcategory có thuộc về category không
-    boolean existsByCategoryCategoryIdAndSubCategoryId(Long categoryId, Long subCategoryId);
-    
-    // Xóa tất cả subcategories của một category
-    void deleteByCategoryCategoryId(Long categoryId);
 }

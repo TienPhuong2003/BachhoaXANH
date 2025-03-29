@@ -23,9 +23,11 @@ public class JwtTokenUtil {
     @Value("${jwt.expiration}")
     private Long expiration;
 
-    public String generateToken(Authentication authentication) {
+    public String generateToken(Authentication authentication, Long userId, String role) {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         Map<String, Object> claims = new HashMap<>();
+        claims.put("userId", userId); 
+        claims.put("role", role);
         return createToken(claims, userDetails.getUsername());
     }
 
@@ -68,7 +70,7 @@ public class JwtTokenUtil {
     public String generatePasswordResetToken(String email) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("purpose", "password_reset");
-        
+
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(email)
@@ -81,17 +83,17 @@ public class JwtTokenUtil {
     public String validatePasswordResetToken(String token) {
         try {
             Claims claims = extractAllClaims(token);
-            
+
             // Kiểm tra xem token có phải là token reset password không
             if (!"password_reset".equals(claims.get("purpose"))) {
                 return null;
             }
-            
+
             // Kiểm tra hết hạn
             if (claims.getExpiration().before(new Date())) {
                 return null;
             }
-            
+
             return claims.getSubject();
         } catch (Exception e) {
             return null;

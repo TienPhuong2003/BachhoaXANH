@@ -57,15 +57,4 @@ public class Category {
     public void setImage(String image) {
         this.image = image;
     }
-
-    // Helper methods
-    public void addSubCategory(SubCategory subCategory) {
-        subCategories.add(subCategory);
-        subCategory.setCategory(this);
-    }
-
-    public void removeSubCategory(SubCategory subCategory) {
-        subCategories.remove(subCategory);
-        subCategory.setCategory(null);
-    }
 }

@@ -12,7 +12,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "users")
+@Table(name = "user")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,10 +38,6 @@ public class User {
     
     @Column(name = "otp_expired_at")
     private LocalDateTime otpExpiredAt;
-
-    // Constructor
-    public User() {
-    }
     
 
     // Getters and Setters

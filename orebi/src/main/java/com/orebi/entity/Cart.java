@@ -48,6 +48,5 @@ public class Cart {
 		this.lineItems = lineItems;
 	}
 
-    // Getters and Setters
     
 }

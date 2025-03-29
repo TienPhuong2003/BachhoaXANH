@@ -8,6 +8,7 @@ public class CategoryDTO {
     private String image;
     private List<SubCategoryDTO> subCategories;
 
+    // Getters và Setters
     public Long getCategoryId() {
         return categoryId;
     }
@@ -39,4 +40,4 @@ public class CategoryDTO {
     public void setSubCategories(List<SubCategoryDTO> subCategories) {
         this.subCategories = subCategories;
     }
-} 
+}

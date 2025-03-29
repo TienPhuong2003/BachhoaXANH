@@ -1,0 +1,204 @@
+package com.orebi.service.auth.impl;
+
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import com.orebi.dto.authDTO.LoginDTO;
+import com.orebi.dto.authDTO.RegisterDTO;
+import com.orebi.dto.response.MessageResponse;
+import com.orebi.entity.Role;
+import com.orebi.entity.User;
+import com.orebi.exception.ResourceNotFoundException;
+import com.orebi.repository.RoleRepository;
+import com.orebi.repository.UserRepository;
+import com.orebi.security.JwtTokenUtil;
+import com.orebi.service.auth.AuthService;
+import com.orebi.service.email.EmailService;
+import com.orebi.service.email.OtpService;
+
+import jakarta.transaction.Transactional;
+
+@Service
+@Transactional
+public class AuthServiceImpl implements AuthService {
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final OtpService otpService;
+    private final JwtTokenUtil jwtTokenUtil;
+    private final AuthenticationManager authenticationManager;
+    private final EmailService emailService;
+
+    public AuthServiceImpl(
+            UserRepository userRepository,
+            RoleRepository roleRepository,
+            PasswordEncoder passwordEncoder,
+            OtpService otpService,
+            JwtTokenUtil jwtTokenUtil,
+            AuthenticationManager authenticationManager,
+            EmailService emailService) {
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.otpService = otpService;
+        this.jwtTokenUtil = jwtTokenUtil;
+        this.authenticationManager = authenticationManager;
+        this.emailService = emailService;
+    }
+
+    // đăng ký
+    @Override
+    public ResponseEntity<?> registerUser(RegisterDTO registerDTO) {
+        try {
+            // Kiểm tra email đã tồn tại
+            Optional<User> existingUser = userRepository.findByEmail(registerDTO.getEmail());
+
+            if (existingUser.isPresent()) {
+                User user = existingUser.get();
+                // Nếu tài khoản chưa xác thực OTP, xóa và đăng ký lại
+                if (!user.isOtpVerified()) {
+                    userRepository.delete(user);
+                } else {
+                    return ResponseEntity.badRequest()
+                            .body(new MessageResponse("Email đã tồn tại và đã được xác thực"));
+                }
+            }
+
+            // Tạo user mới
+            User newUser = new User();
+            newUser.setName(registerDTO.getName());
+            newUser.setEmail(registerDTO.getEmail());
+            newUser.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
+            newUser.setPhone(registerDTO.getPhone());
+            newUser.setOtpVerified(false);
+
+            // Set role mặc định
+            Role userRole = roleRepository.findByRoleName("ROLE_USER")
+                    .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy ROLE_USER"));
+            newUser.setRole(userRole);
+
+            // Lưu user vào DB
+            userRepository.save(newUser);
+
+            // Gửi OTP qua email
+            otpService.generateAndSendOtp(newUser.getEmail());
+
+            return ResponseEntity.ok(new MessageResponse(
+                    existingUser.isPresent()
+                            ? "Email đã tồn tại nhưng chưa xác thực. Đã gửi lại mã OTP mới, vui lòng kiểm tra email để xác thực tài khoản"
+                            : "Đăng ký thành công. Vui lòng kiểm tra email để xác thực tài khoản"));
+
+        } catch (Exception e) {
+            return ResponseEntity.badRequest()
+                    .body(new MessageResponse("Lỗi đăng ký: " + e.getMessage()));
+        }
+    }
+
+    // đăng nhập
+    @Override
+    public ResponseEntity<?> loginUser(LoginDTO loginDTO) {
+        try {
+            User user = userRepository.findByEmail(loginDTO.getEmail())
+                    .orElseThrow(() -> new RuntimeException("Email không tồn tại"));
+
+            if (!user.isOtpVerified()) {
+                otpService.generateAndSendOtp(user.getEmail());
+                return ResponseEntity.badRequest()
+                        .body(new MessageResponse("Tài khoản chưa xác thực. OTP mới đã được gửi đến email."));
+            }
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            loginDTO.getEmail(),
+                            loginDTO.getPassword()));
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            String token = jwtTokenUtil.generateToken(authentication, user.getUserId(), user.getRole().getRoleName());
+
+            return ResponseEntity.ok(Collections.singletonMap("accessToken", token));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Email hoặc mật khẩu không chính xác"));
+        }
+    }
+
+    // xác thực otp
+    @Override
+    public ResponseEntity<?> verifyAccount(String email, String otp) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("không tìm thấy người dùng"));
+
+        if (!user.getOtp().equals(otp)) {
+            return ResponseEntity.badRequest().body("Invalid OTP");
+        }
+
+        if (LocalDateTime.now().isAfter(user.getOtpExpiredAt())) {
+            return ResponseEntity.badRequest().body("OTP has expired");
+        }
+
+        user.setOtpVerified(true);
+        user.setOtp(null);
+        user.setOtpExpiredAt(null);
+        userRepository.save(user);
+
+        return ResponseEntity.ok("Xác thực tài khoàn thành công");
+    }
+
+    // Đặt lại mật khẩu
+    @Override
+    public ResponseEntity<?> resetPassword(String token, String newPassword) {
+        String email = jwtTokenUtil.validatePasswordResetToken(token);
+        if (email == null) {
+            throw new RuntimeException("Token không hợp lệ hoặc đã hết hạn");
+        }
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng"));
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+
+        try {
+            return ResponseEntity.ok(new MessageResponse("Mật khẩu đã được đặt lại thành công"));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Lỗi: " + e.getMessage()));
+        }
+    }
+
+    // Quên mật khẩu
+    @Override
+    public ResponseEntity<?> forgotPassword(String email) {
+        try {
+            User user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng với email này"));
+
+            String resetToken = jwtTokenUtil.generatePasswordResetToken(user.getEmail());
+            String resetLink = "http://localhost:3000/reset-password/" + resetToken;
+
+            emailService.sendPasswordResetEmail(user.getEmail(), resetLink);
+            return ResponseEntity.ok(new MessageResponse("Link đặt lại mật khẩu đã được gửi đến email của bạn"));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Lỗi: " + e.getMessage()));
+        }
+    }
+
+    // Gửi OTP
+    public ResponseEntity<?> sendOtp(String email) {
+        try {
+            otpService.generateAndSendOtp(email);
+            return ResponseEntity.ok(new MessageResponse("OTP đã được gửi"));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest()
+                    .body(new MessageResponse("Lỗi khi gửi OTP: " + e.getMessage()));
+        }
+    }
+}

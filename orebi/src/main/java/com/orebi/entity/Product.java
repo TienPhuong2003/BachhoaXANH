@@ -20,6 +20,7 @@ public class Product {
     private double discountedPrice;
     private double discountPercentage;
     private String unit;
+    private String description;
 
     @ManyToOne
     @JoinColumn(name = "product_detail_id")
@@ -34,6 +35,13 @@ public class Product {
     private SubCategory subCategory;
 
     // Getters and Setters
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
     public void setProductId(Long id) {
         this.productId = id;
     }

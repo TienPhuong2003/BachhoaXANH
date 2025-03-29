@@ -9,5 +9,5 @@ import com.orebi.entity.ProductImage;
 
 @Repository
 public interface ProductImageRepository extends JpaRepository<ProductImage, Long> {
-    List<ProductImage> findByProductDetailProductDetailId(Long productDetailId);
+    
 }
