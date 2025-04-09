@@ -24,8 +24,7 @@ public class LineItem {
     private Product product;
 
     private int quantity;
-
-    // Getters and Setters
+    
     public void setLineItemId(Long id) {
         this.lineItemId = id;
     }

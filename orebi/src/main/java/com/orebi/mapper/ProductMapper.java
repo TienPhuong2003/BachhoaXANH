@@ -3,7 +3,7 @@ package com.orebi.mapper;
 import org.springframework.stereotype.Component;
 
 import com.orebi.dto.ProductDTO;
-import com.orebi.entity.Product;
+import com.orebi.entity.*;
 
 @Component
 public class ProductMapper implements EntityMapper<ProductDTO, Product> {
@@ -19,10 +19,9 @@ public class ProductMapper implements EntityMapper<ProductDTO, Product> {
         dto.setName(product.getName());
         dto.setImage(product.getImage());
         dto.setOriginalPrice(product.getOriginalPrice());
-        dto.setDiscountedPrice(product.getDiscountedPrice());
-        dto.setDiscountPercentage(product.getDiscountPercentage());
         dto.setUnit(product.getUnit());
         dto.setDescription(product.getDescription());
+        dto.setDiscountedPrice(product.getDiscountedPrice());
 
         if (product.getCategory() != null) {
             dto.setCategoryId(product.getCategory().getCategoryId());
@@ -30,6 +29,14 @@ public class ProductMapper implements EntityMapper<ProductDTO, Product> {
 
         if (product.getSubCategory() != null) {
             dto.setSubCategoryId(product.getSubCategory().getSubCategoryId());
+        }
+
+        if (product.getProductDetail() != null) {
+            dto.setProductDetailId(product.getProductDetail().getProductDetailId());
+        }
+
+        if (product.getAppliedDiscountCode() != null) {
+            dto.setAppliedDiscountCodeId(product.getAppliedDiscountCode().getId());
         }
 
         return dto;
@@ -45,10 +52,32 @@ public class ProductMapper implements EntityMapper<ProductDTO, Product> {
         product.setName(dto.getName());
         product.setImage(dto.getImage());
         product.setOriginalPrice(dto.getOriginalPrice());
-        product.setDiscountedPrice(dto.getDiscountedPrice());
-        product.setDiscountPercentage(dto.getDiscountPercentage());
         product.setUnit(dto.getUnit());
         product.setDescription(dto.getDescription());
+
+        if (dto.getCategoryId() != null) {
+            Category category = new Category();
+            category.setCategoryId(dto.getCategoryId());
+            product.setCategory(category);
+        }
+
+        if (dto.getSubCategoryId() != null) {
+            SubCategory subCategory = new SubCategory();
+            subCategory.setSubCategoryId(dto.getSubCategoryId());
+            product.setSubCategory(subCategory);
+        }
+
+        if (dto.getProductDetailId() != null) {
+            ProductDetail productDetail = new ProductDetail();
+            productDetail.setProductDetailId(dto.getProductDetailId());
+            product.setProductDetail(productDetail);
+        }
+
+        if (dto.getAppliedDiscountCodeId() != null) {
+            DiscountCode discountCode = new DiscountCode();
+            discountCode.setId(dto.getAppliedDiscountCodeId());
+            product.setAppliedDiscountCode(discountCode);
+        }
 
         return product;
     }

@@ -86,11 +86,8 @@ public class AuthServiceImpl implements AuthService {
             Role userRole = roleRepository.findByRoleName("ROLE_USER")
                     .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy ROLE_USER"));
             newUser.setRole(userRole);
-
-            // Lưu user vào DB
             userRepository.save(newUser);
 
-            // Gửi OTP qua email
             otpService.generateAndSendOtp(newUser.getEmail());
 
             return ResponseEntity.ok(new MessageResponse(
@@ -174,7 +171,6 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
-    // Quên mật khẩu
     @Override
     public ResponseEntity<?> forgotPassword(String email) {
         try {

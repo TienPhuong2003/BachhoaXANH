@@ -1,33 +1,18 @@
-package com.orebi.entity;
+package com.orebi.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.List;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-
-@Entity
-@Table(name = "order")
-public class Order {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class OrderDTO {
     private Long orderId;
     private String date;
     private double totalPrice;
     private String paymentMethod;
+    private Long userId;
+    private List<OrderDetailDTO> orderDetails;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    @OneToMany(mappedBy = "order")
-    private List<OrderDetail> orderDetails;
-    
+    // Getters and Setters
     public Long getOrderId() {
         return orderId;
     }
@@ -60,19 +45,19 @@ public class Order {
         this.paymentMethod = paymentMethod;
     }
 
-    public User getUser() {
-        return user;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
-    public List<OrderDetail> getOrderDetails() {
+    public List<OrderDetailDTO> getOrderDetails() {
         return orderDetails;
     }
 
-    public void setOrderDetails(List<OrderDetail> orderDetails) {
+    public void setOrderDetails(List<OrderDetailDTO> orderDetails) {
         this.orderDetails = orderDetails;
     }
 }

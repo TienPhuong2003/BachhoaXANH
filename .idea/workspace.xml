@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="0d7f1be3-4484-4033-b372-0d6582321207" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/config/DataInitializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/config/DataInitializer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/config/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/controller/AdminController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/controller/AuthController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/controller/CategoryController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/controller/FileUploadController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/controller/LineItemController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/controller/OrderController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/controller/OrderDetailController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/controller/ProductController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/controller/ProductDetailController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/controller/SubCategoryController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/controller/UserController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/dto/CategoryDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/dto/CategoryTreeDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/dto/ForgotPasswordRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/dto/LoginDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/dto/MessageResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/dto/OrderDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/dto/OrderDetailDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/dto/ProductDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/dto/ProductDetailDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/dto/ProductImageDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/dto/RegisterDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/dto/ResetPasswordRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/dto/SubCategoryDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/entity/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/repository/CartRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/repository/CartRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/repository/LineItemRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/repository/LineItemRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/repository/OrderRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/repository/OrderRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/repository/ProductDetailRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/repository/ProductDetailRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/repository/ProductImageRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/repository/ProductImageRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/repository/ProductRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/repository/ProductRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/repository/SubCategoryRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/repository/SubCategoryRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/security/CustomUserDetailsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/security/CustomUserDetailsService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/service/CartService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/service/CategoryService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/service/EmailService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/service/LineItemService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/service/OrderDetailService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/service/OrderService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/service/OtpService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/service/ProductDetailService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/service/ProductImageService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/service/ProductService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/service/SubCategoryService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orebi/src/main/java/com/orebi/service/UserService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orebi/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/orebi/src/main/resources/application.properties" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "customColor": "",
+  "associatedIndex": 2
+}]]></component>
+  <component name="ProjectId" id="2u0Bvsb7iozYlNVFfIYw6hneoxd" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "E:/SpringBoot/BachHoaXanh"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="0d7f1be3-4484-4033-b372-0d6582321207" name="Changes" comment="" />
+      <created>1741375848500</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1741375848500</updated>
+    </task>
+    <servers />
+  </component>
+</project>

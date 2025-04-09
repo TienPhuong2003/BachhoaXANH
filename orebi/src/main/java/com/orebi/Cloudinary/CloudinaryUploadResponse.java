@@ -10,7 +10,6 @@ public class CloudinaryUploadResponse {
         this.publicId = publicId;
     }
 
-    // Getters and setters
     public String getUrl() {
         return url;
     }

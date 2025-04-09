@@ -47,6 +47,4 @@ public class Cart {
 	public void setLineItems(List<LineItem> lineItems) {
 		this.lineItems = lineItems;
 	}
-
-    
 }

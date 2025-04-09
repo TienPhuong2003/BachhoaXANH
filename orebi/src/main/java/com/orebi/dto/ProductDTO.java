@@ -5,25 +5,17 @@ public class ProductDTO {
     private String name;
     private String image;
     private double originalPrice;
-    private double discountedPrice;
-    private double discountPercentage;
     private String unit;
+    private String description;
     private Long categoryId;
     private Long subCategoryId;
-    private String description;
-
-    
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     private Long productDetailId;
+    private Long appliedDiscountCodeId;
 
-    // Getters and Setters
+    private double discountedPrice;
+
+    // --- Getter & Setter ---
+
     public Long getProductId() {
         return productId;
     }
@@ -56,28 +48,20 @@ public class ProductDTO {
         this.originalPrice = originalPrice;
     }
 
-    public double getDiscountedPrice() {
-        return discountedPrice;
-    }
-
-    public void setDiscountedPrice(double discountedPrice) {
-        this.discountedPrice = discountedPrice;
-    }
-
-    public double getDiscountPercentage() {
-        return discountPercentage;
-    }
-
-    public void setDiscountPercentage(double discountPercentage) {
-        this.discountPercentage = discountPercentage;
-    }
-
     public String getUnit() {
         return unit;
     }
 
     public void setUnit(String unit) {
         this.unit = unit;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Long getCategoryId() {
@@ -96,6 +80,22 @@ public class ProductDTO {
         this.subCategoryId = subCategoryId;
     }
 
+    public Long getAppliedDiscountCodeId() {
+        return appliedDiscountCodeId;
+    }
+
+    public void setAppliedDiscountCodeId(Long appliedDiscountCodeId) {
+        this.appliedDiscountCodeId = appliedDiscountCodeId;
+    }
+
+    public double getDiscountedPrice() {
+        return discountedPrice;
+    }
+
+    public void setDiscountedPrice(double discountedPrice) {
+        this.discountedPrice = discountedPrice;
+    }
+
     public Long getProductDetailId() {
         return productDetailId;
     }
@@ -103,4 +103,5 @@ public class ProductDTO {
     public void setProductDetailId(Long productDetailId) {
         this.productDetailId = productDetailId;
     }
+
 }

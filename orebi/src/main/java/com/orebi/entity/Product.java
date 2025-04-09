@@ -1,12 +1,8 @@
 package com.orebi.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import java.util.List;
+
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "product")
@@ -14,15 +10,15 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long productId;
+
     private String name;
     private String image;
     private double originalPrice;
     private double discountedPrice;
-    private double discountPercentage;
     private String unit;
     private String description;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "product_detail_id")
     private ProductDetail productDetail;
 
@@ -34,22 +30,20 @@ public class Product {
     @JoinColumn(name = "sub_category_id")
     private SubCategory subCategory;
 
-    // Getters and Setters
-    public String getDescription() {
-        return description;
-    }
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<DiscountProduct> discountProducts;
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-    public void setProductId(Long id) {
-        this.productId = id;
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "applied_discount_code_id")
+    private DiscountCode appliedDiscountCode;
 
     public Long getProductId() {
         return productId;
     }
 
+    public void setProductId(Long id) {
+        this.productId = id;
+    }
 
     public String getName() {
         return this.name;
@@ -73,22 +67,23 @@ public class Product {
 
     public void setOriginalPrice(double originalPrice) {
         this.originalPrice = originalPrice;
+        updateDiscountedPrice();
     }
 
     public double getDiscountedPrice() {
         return this.discountedPrice;
     }
 
-    public void setDiscountedPrice(double discountedPrice) {
-        this.discountedPrice = discountedPrice;
-    }
-
-    public double getDiscountPercentage() {
-        return this.discountPercentage;
-    }
-
-    public void setDiscountPercentage(double discountPercentage) {
-        this.discountPercentage = discountPercentage;
+    private void updateDiscountedPrice() {
+        if (appliedDiscountCode != null) {
+            if (appliedDiscountCode.isPercentage()) {
+                this.discountedPrice = originalPrice * (1 - appliedDiscountCode.getDiscountValue() / 100.0);
+            } else {
+                this.discountedPrice = Math.max(0, originalPrice - appliedDiscountCode.getDiscountValue());
+            }
+        } else {
+            this.discountedPrice = originalPrice;
+        }
     }
 
     public String getUnit() {
@@ -97,6 +92,14 @@ public class Product {
 
     public void setUnit(String unit) {
         this.unit = unit;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public ProductDetail getProductDetail() {
@@ -123,4 +126,20 @@ public class Product {
         this.subCategory = subCategory;
     }
 
+    public List<DiscountProduct> getDiscountProducts() {
+        return discountProducts;
+    }
+
+    public void setDiscountProducts(List<DiscountProduct> discountProducts) {
+        this.discountProducts = discountProducts;
+    }
+
+    public DiscountCode getAppliedDiscountCode() {
+        return appliedDiscountCode;
+    }
+
+    public void setAppliedDiscountCode(DiscountCode appliedDiscountCode) {
+        this.appliedDiscountCode = appliedDiscountCode;
+        updateDiscountedPrice();
+    }
 }
