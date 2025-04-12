@@ -24,7 +24,9 @@ public class LineItem {
     private Product product;
 
     private int quantity;
-    
+
+    private double totalPrice;
+
     public void setLineItemId(Long id) {
         this.lineItemId = id;
     }
@@ -32,7 +34,6 @@ public class LineItem {
     public Long getLineItemId() {
         return this.lineItemId;
     }
-
 
     public Cart getCart() {
         return this.cart;
@@ -56,6 +57,14 @@ public class LineItem {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
     }
 
 }

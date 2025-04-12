@@ -21,7 +21,8 @@ public class LineItemMapper implements EntityMapper<LineItemDTO, LineItem> {
         return new LineItemDTO(
                 entity.getLineItemId(),
                 productMapper.toDTO(entity.getProduct()),  
-                entity.getQuantity()
+                entity.getQuantity(),
+                entity.getTotalPrice()
         );
     }
 
@@ -34,6 +35,7 @@ public class LineItemMapper implements EntityMapper<LineItemDTO, LineItem> {
         lineItem.setLineItemId(dto.getLineItemId());
         lineItem.setQuantity(dto.getQuantity());
         lineItem.setProduct(productMapper.toEntity(dto.getProduct()));
+        lineItem.setTotalPrice(dto.getTotalPrice());
         return lineItem;
     }
 }

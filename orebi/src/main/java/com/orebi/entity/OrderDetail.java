@@ -16,15 +16,23 @@ public class OrderDetail {
     private Long orderDetailId;
 
     @ManyToOne
-    @JoinColumn(name = "order_id")
+    @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
     @ManyToOne
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
     private int quantity;
-    private double totalLineItem;
+
+    private double unitPrice; 
+
+    private double totalPrice; 
+
+    private String productNameSnapshot;
+
+    private String productImageSnapshot;
+
 
     public Long getOrderDetailId() {
         return orderDetailId;
@@ -58,11 +66,38 @@ public class OrderDetail {
         this.quantity = quantity;
     }
 
-    public double getTotalLineItem() {
-        return totalLineItem;
+    public double getUnitPrice() {
+        return unitPrice;
     }
 
-    public void setTotalLineItem(double totalLineItem) {
-        this.totalLineItem = totalLineItem;
+    public void setUnitPrice(double unitPrice) {
+        this.unitPrice = unitPrice;
     }
+
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    public String getProductNameSnapshot() {
+        return productNameSnapshot;
+    }
+
+    public void setProductNameSnapshot(String productNameSnapshot) {
+        this.productNameSnapshot = productNameSnapshot;
+    }
+
+    public String getProductImageSnapshot() {
+        return productImageSnapshot;
+    }
+
+    public void setProductImageSnapshot(String productImageSnapshot) {
+        this.productImageSnapshot = productImageSnapshot;
+    } 
+
+    
+
 }
