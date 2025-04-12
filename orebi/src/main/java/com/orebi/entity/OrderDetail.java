@@ -26,7 +26,6 @@ public class OrderDetail {
     private int quantity;
     private double totalLineItem;
 
-    // Getters and Setters
     public Long getOrderDetailId() {
         return orderDetailId;
     }
