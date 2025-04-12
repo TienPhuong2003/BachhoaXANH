@@ -1,5 +1,8 @@
 package com.orebi.service.cart.impl;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -7,9 +10,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.orebi.dto.CartDTO;
-import com.orebi.dto.OrderDTO;
+import com.orebi.dto.request.UpdateCartRequest;
 import com.orebi.entity.Cart;
 import com.orebi.entity.LineItem;
+import com.orebi.entity.Order;
+import com.orebi.entity.OrderDetail;
+import com.orebi.entity.OrderStatus;
+import com.orebi.entity.PaymentMethod;
 import com.orebi.entity.Product;
 import com.orebi.entity.User;
 import com.orebi.exception.ResourceNotFoundException;
@@ -84,68 +91,104 @@ public class CartServiceImpl implements CartService {
 
     @Override
     @Transactional
-    public CartDTO addItemToCart(Long productId, int quantity) {
+    public CartDTO updateCartItems(List<UpdateCartRequest.CartItemUpdate> items) {
         Long userId = getCurrentUserId();
         Cart cart = getOrCreateCartEntity(userId);
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("Product không tồn tại"));
 
-        LineItem lineItem = lineItemRepository.findByCartAndProduct(cart, product)
-                .orElseGet(() -> {
+        for (UpdateCartRequest.CartItemUpdate item : items) {
+            Product product = productRepository.findById(item.getProductId())
+                    .orElseThrow(
+                            () -> new ResourceNotFoundException("Không tìm thấy sản phẩm ID: " + item.getProductId()));
+
+            Optional<LineItem> existingLineItemOpt = lineItemRepository.findByCartAndProduct(cart, product);
+
+            if (item.getQuantity() <= 0) {
+                existingLineItemOpt.ifPresent(lineItem -> {
+                    lineItemRepository.delete(lineItem);
+                    cart.getLineItems().remove(lineItem);
+                });
+            } else {
+                LineItem lineItem = existingLineItemOpt.orElseGet(() -> {
                     LineItem newItem = new LineItem();
                     newItem.setCart(cart);
                     newItem.setProduct(product);
-                    newItem.setQuantity(0);
                     return newItem;
                 });
 
-        lineItem.setQuantity(lineItem.getQuantity() + quantity);
-        calculateTotalPrice(lineItem);
-
-        lineItemRepository.save(lineItem);
-
-        CartDTO cartDTO = cartMapper.toDTO(cart);
-        cartDTO.setLineItems(lineItemMapper.toDTOList(cart.getLineItems()));
-        return cartDTO;
-    }
-
-    @Override
-    @Transactional
-    public CartDTO removeItemFromCart(Long productId) {
-        Long userId = getCurrentUserId();
-        Cart cart = getOrCreateCartEntity(userId);
-
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy sản phẩm ID: " + productId));
-
-        lineItemRepository.findByCartAndProduct(cart, product).ifPresent(lineItem -> {
-            lineItemRepository.delete(lineItem);
-            cart.getLineItems().remove(lineItem);
-        });
-
-        cartRepository.save(cart);
+                lineItem.setQuantity(item.getQuantity());
+                calculateTotalPrice(lineItem);
+                lineItemRepository.save(lineItem);
+            }
+        }
 
         CartDTO cartDTO = cartMapper.toDTO(cart);
         cartDTO.setLineItems(lineItemMapper.toDTOList(cart.getLineItems()));
         return cartDTO;
     }
 
-    @Override
     @Transactional
-    public void clearCart() {
+    public void checkout(List<Long> lineItemIds) {
         Long userId = getCurrentUserId();
         Cart cart = getOrCreateCartEntity(userId);
+        User user = cart.getUser();
 
-        lineItemRepository.deleteByCart(cart);
-        cart.getLineItems().clear();
-        cartRepository.save(cart);
+        List<LineItem> selectedItems = cart.getLineItems().stream()
+                .filter(item -> lineItemIds.contains(item.getLineItemId()))
+                .toList();
+
+        if (selectedItems.isEmpty()) {
+            throw new IllegalStateException("Không có sản phẩm nào được chọn để đặt hàng.");
+        }
+
+        Order order = new Order();
+        order.setUser(user);
+        order.setOrderDate(LocalDateTime.now());
+        order.setStatus(OrderStatus.PENDING);
+        order.setPaymentMethod(PaymentMethod.COD);
+
+        order.setPhone(user.getPhone());
+        order.setIsPaid(false);
+        order.setCreatedAt(LocalDateTime.now());
+        order.setUpdatedAt(LocalDateTime.now());
+
+        double totalOrderPrice = 0;
+        List<OrderDetail> orderDetails = new ArrayList<>();
+
+        for (LineItem item : selectedItems) {
+            Product product = item.getProduct();
+            double unitPrice = product.getDiscountedPrice() > 0 ? product.getDiscountedPrice()
+                    : product.getOriginalPrice();
+            int quantity = item.getQuantity();
+            double totalPrice = unitPrice * quantity;
+
+            OrderDetail detail = new OrderDetail();
+            detail.setOrder(order);
+            detail.setQuantity(quantity);
+            detail.setUnitPrice(unitPrice);
+            detail.setTotalPrice(totalPrice);
+
+            detail.setSnapshotProductId(product.getProductId());
+            detail.setSnapshotProductName(product.getName());
+            detail.setSnapshotProductImage(product.getImage());
+            detail.setSnapshotPrice(unitPrice);
+
+            orderDetails.add(detail);
+            totalOrderPrice += totalPrice;
+        }
+
+        order.setTotalPrice(totalOrderPrice);
+        order.setOrderDetails(orderDetails);
+
+        orderRepository.save(order);
+
+        lineItemRepository.deleteAll(selectedItems);
+        cart.getLineItems().removeAll(selectedItems);
     }
 
-
-    //helper method
+    // helper method
     private void calculateTotalPrice(LineItem lineItem) {
         Product product = lineItem.getProduct();
-        double price =  product.getDiscountedPrice() != 0 ? product.getDiscountedPrice()
+        double price = product.getDiscountedPrice() != 0 ? product.getDiscountedPrice()
                 : product.getOriginalPrice();
         lineItem.setTotalPrice(price * lineItem.getQuantity());
     }

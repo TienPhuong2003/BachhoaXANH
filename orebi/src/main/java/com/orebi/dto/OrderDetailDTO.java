@@ -2,30 +2,17 @@ package com.orebi.dto;
 
 public class OrderDetailDTO {
     private Long orderDetailId;
-    private Long orderId; 
-    private Long productId; 
+    private Long orderId;
+
     private int quantity;
     private double unitPrice;
     private double totalPrice;
-    private String productNameSnapshot;
-    private String productImageSnapshot;
 
+    private Long snapshotProductId;
+    private String snapshotProductName;
+    private String snapshotProductImage;
+    private double snapshotPrice;
 
-    public OrderDetailDTO() {
-    }
-
-    public OrderDetailDTO(Long orderDetailId, Long orderId, Long productId, int quantity, double unitPrice, double totalPrice, String productNameSnapshot, String productImageSnapshot) {
-        this.orderDetailId = orderDetailId;
-        this.orderId = orderId;
-        this.productId = productId;
-        this.quantity = quantity;
-        this.unitPrice = unitPrice;
-        this.totalPrice = totalPrice;
-        this.productNameSnapshot = productNameSnapshot;
-        this.productImageSnapshot = productImageSnapshot;
-    }
-
-    // Getters and Setters
     public Long getOrderDetailId() {
         return orderDetailId;
     }
@@ -42,20 +29,14 @@ public class OrderDetailDTO {
         this.orderId = orderId;
     }
 
-    public Long getProductId() {
-        return productId;
-    }
-
-    public void setProductId(Long productId) {
-        this.productId = productId;
-    }
-
     public int getQuantity() {
         return quantity;
     }
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+        // Optionally update totalPrice here if unitPrice is already set
+        this.totalPrice = this.unitPrice * quantity;
     }
 
     public double getUnitPrice() {
@@ -64,6 +45,8 @@ public class OrderDetailDTO {
 
     public void setUnitPrice(double unitPrice) {
         this.unitPrice = unitPrice;
+        // Optionally update totalPrice here if quantity is already set
+        this.totalPrice = unitPrice * this.quantity;
     }
 
     public double getTotalPrice() {
@@ -74,19 +57,35 @@ public class OrderDetailDTO {
         this.totalPrice = totalPrice;
     }
 
-    public String getProductNameSnapshot() {
-        return productNameSnapshot;
+    public Long getSnapshotProductId() {
+        return snapshotProductId;
     }
 
-    public void setProductNameSnapshot(String productNameSnapshot) {
-        this.productNameSnapshot = productNameSnapshot;
+    public void setSnapshotProductId(Long snapshotProductId) {
+        this.snapshotProductId = snapshotProductId;
     }
 
-    public String getProductImageSnapshot() {
-        return productImageSnapshot;
+    public String getSnapshotProductName() {
+        return snapshotProductName;
     }
 
-    public void setProductImageSnapshot(String productImageSnapshot) {
-        this.productImageSnapshot = productImageSnapshot;
+    public void setSnapshotProductName(String snapshotProductName) {
+        this.snapshotProductName = snapshotProductName;
+    }
+
+    public String getSnapshotProductImage() {
+        return snapshotProductImage;
+    }
+
+    public void setSnapshotProductImage(String snapshotProductImage) {
+        this.snapshotProductImage = snapshotProductImage;
+    }
+
+    public double getSnapshotPrice() {
+        return snapshotPrice;
+    }
+
+    public void setSnapshotPrice(double snapshotPrice) {
+        this.snapshotPrice = snapshotPrice;
     }
 }

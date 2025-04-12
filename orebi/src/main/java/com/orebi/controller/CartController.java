@@ -1,9 +1,15 @@
 package com.orebi.controller;
 
-import com.orebi.dto.CartDTO;
-import com.orebi.service.cart.CartService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.orebi.dto.CartDTO;
+import com.orebi.dto.request.UpdateCartRequest;
+import com.orebi.service.cart.CartService;
 
 @RestController
 @RequestMapping("/api/carts")
@@ -22,23 +28,8 @@ public class CartController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<CartDTO> addItemToCart(
-            @RequestParam Long productId,
-            @RequestParam int quantity) {
-        CartDTO updatedCart = cartService.addItemToCart(productId, quantity);
-        return ResponseEntity.ok(updatedCart);
-    }
-
-    @DeleteMapping("/remove/{productId}")
-    public ResponseEntity<CartDTO> removeItemFromCart(@PathVariable Long productId) {
-        CartDTO updatedCart = cartService.removeItemFromCart(productId);
-        return ResponseEntity.ok(updatedCart);
-    }
-
-    @DeleteMapping("/clear")
-    public ResponseEntity<Void> clearCart() {
-        cartService.clearCart();
-        return ResponseEntity.noContent().build();
+    @PutMapping("/items")
+    public ResponseEntity<CartDTO> updateCart(@RequestBody UpdateCartRequest request) {
+        return ResponseEntity.ok(cartService.updateCartItems(request.getItems()));
     }
 }

@@ -19,20 +19,17 @@ public class OrderDetail {
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
-    @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
-    private Product product;
-
     private int quantity;
+    private double unitPrice;
+    private double totalPrice;
 
-    private double unitPrice; 
+    // Snapshot thông tin sản phẩm tại thời điểm đặt hàng
+    private Long snapshotProductId;
+    private String snapshotProductName;
+    private String snapshotProductImage;
+    private double snapshotPrice;
 
-    private double totalPrice; 
-
-    private String productNameSnapshot;
-
-    private String productImageSnapshot;
-
+    // === Getter & Setter ===
 
     public Long getOrderDetailId() {
         return orderDetailId;
@@ -48,14 +45,6 @@ public class OrderDetail {
 
     public void setOrder(Order order) {
         this.order = order;
-    }
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
     }
 
     public int getQuantity() {
@@ -82,22 +71,35 @@ public class OrderDetail {
         this.totalPrice = totalPrice;
     }
 
-    public String getProductNameSnapshot() {
-        return productNameSnapshot;
+    public Long getSnapshotProductId() {
+        return snapshotProductId;
     }
 
-    public void setProductNameSnapshot(String productNameSnapshot) {
-        this.productNameSnapshot = productNameSnapshot;
+    public void setSnapshotProductId(Long snapshotProductId) {
+        this.snapshotProductId = snapshotProductId;
     }
 
-    public String getProductImageSnapshot() {
-        return productImageSnapshot;
+    public String getSnapshotProductName() {
+        return snapshotProductName;
     }
 
-    public void setProductImageSnapshot(String productImageSnapshot) {
-        this.productImageSnapshot = productImageSnapshot;
-    } 
+    public void setSnapshotProductName(String snapshotProductName) {
+        this.snapshotProductName = snapshotProductName;
+    }
 
-    
+    public String getSnapshotProductImage() {
+        return snapshotProductImage;
+    }
 
+    public void setSnapshotProductImage(String snapshotProductImage) {
+        this.snapshotProductImage = snapshotProductImage;
+    }
+
+    public double getSnapshotPrice() {
+        return snapshotPrice;
+    }
+
+    public void setSnapshotPrice(double snapshotPrice) {
+        this.snapshotPrice = snapshotPrice;
+    }
 }

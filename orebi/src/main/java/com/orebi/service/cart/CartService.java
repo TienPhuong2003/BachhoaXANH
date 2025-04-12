@@ -1,11 +1,13 @@
 package com.orebi.service.cart;
 
-import com.orebi.dto.CartDTO;
+import java.util.List;
 import java.util.Optional;
+
+import com.orebi.dto.CartDTO;
+import com.orebi.dto.request.UpdateCartRequest;
 
 public interface CartService {
     Optional<CartDTO> getCartByUserId();
-    CartDTO addItemToCart(Long productId, int quantity);
-    CartDTO removeItemFromCart( Long productId);
-    void clearCart();
+
+    CartDTO updateCartItems(List<UpdateCartRequest.CartItemUpdate> items);
 }
