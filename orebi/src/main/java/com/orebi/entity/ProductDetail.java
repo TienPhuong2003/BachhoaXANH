@@ -24,7 +24,7 @@ public class ProductDetail {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT", nullable = true)
     private String destable;
 
     @OneToOne

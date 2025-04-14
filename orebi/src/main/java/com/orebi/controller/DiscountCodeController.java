@@ -3,6 +3,7 @@ package com.orebi.controller;
 import com.orebi.dto.DiscountCodeDTO;
 import com.orebi.service.discount.DiscountCodeService;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,7 +14,7 @@ public class DiscountCodeController {
 
     private final DiscountCodeService discountCodeService;
 
-    public DiscountCodeController(DiscountCodeService discountCodeService){
+    public DiscountCodeController(DiscountCodeService discountCodeService) {
         this.discountCodeService = discountCodeService;
     }
 
@@ -40,5 +41,13 @@ public class DiscountCodeController {
     @GetMapping
     public List<DiscountCodeDTO> getAll() {
         return discountCodeService.getAllDiscountCodes();
+    }
+
+    @PostMapping("/apply")
+    public ResponseEntity<String> applyDiscountCode(
+            @RequestBody String code,
+            @RequestBody List<Long> productIds) {
+        discountCodeService.applyDiscountCodeToProducts(code, productIds);
+        return ResponseEntity.ok("Áp mã giảm giá thành công cho các sản phẩm.");
     }
 }

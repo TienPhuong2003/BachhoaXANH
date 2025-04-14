@@ -10,4 +10,5 @@ public interface DiscountCodeService {
     void deleteDiscountCode(Long id);
     DiscountCodeDTO getDiscountCodeById(Long id);
     List<DiscountCodeDTO> getAllDiscountCodes();
+    void applyDiscountCodeToProducts(String code, List<Long> productIds);
 }
