@@ -10,13 +10,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.orebi.dto.CartDTO;
+import com.orebi.dto.request.CheckoutRequest;
 import com.orebi.dto.request.UpdateCartRequest;
 import com.orebi.entity.Cart;
 import com.orebi.entity.LineItem;
 import com.orebi.entity.Order;
 import com.orebi.entity.OrderDetail;
 import com.orebi.entity.OrderStatus;
-import com.orebi.entity.PaymentMethod;
 import com.orebi.entity.Product;
 import com.orebi.entity.User;
 import com.orebi.exception.ResourceNotFoundException;
@@ -126,14 +126,15 @@ public class CartServiceImpl implements CartService {
         return cartDTO;
     }
 
+    @Override
     @Transactional
-    public void checkout(List<Long> lineItemIds) {
+    public void checkout(CheckoutRequest checkoutRequest) {
         Long userId = getCurrentUserId();
         Cart cart = getOrCreateCartEntity(userId);
         User user = cart.getUser();
 
         List<LineItem> selectedItems = cart.getLineItems().stream()
-                .filter(item -> lineItemIds.contains(item.getLineItemId()))
+                .filter(item -> checkoutRequest.getLineItemIds().contains(item.getLineItemId()))
                 .toList();
 
         if (selectedItems.isEmpty()) {
@@ -144,9 +145,13 @@ public class CartServiceImpl implements CartService {
         order.setUser(user);
         order.setOrderDate(LocalDateTime.now());
         order.setStatus(OrderStatus.PENDING);
-        order.setPaymentMethod(PaymentMethod.COD);
-
-        order.setPhone(user.getPhone());
+        order.setPaymentMethod(checkoutRequest.getPaymentMethod());
+        order.setShippingAddress(checkoutRequest.getShippingAddress());
+        order.setPhone(checkoutRequest.getPhone());
+        order.setShippingFee(checkoutRequest.getShippingFee());
+        order.setRecipientName(checkoutRequest.getRecipientName());
+        order.setRecipientPhone(checkoutRequest.getRecipientPhone());
+        order.setNote(checkoutRequest.getNote());
         order.setIsPaid(false);
         order.setCreatedAt(LocalDateTime.now());
         order.setUpdatedAt(LocalDateTime.now());
@@ -166,7 +171,6 @@ public class CartServiceImpl implements CartService {
             detail.setQuantity(quantity);
             detail.setUnitPrice(unitPrice);
             detail.setTotalPrice(totalPrice);
-
             detail.setSnapshotProductId(product.getProductId());
             detail.setSnapshotProductName(product.getName());
             detail.setSnapshotProductImage(product.getImage());
