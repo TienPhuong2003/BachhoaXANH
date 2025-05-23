@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -38,6 +38,9 @@ public class AuthServiceImpl implements AuthService {
     private final JwtTokenUtil jwtTokenUtil;
     private final AuthenticationManager authenticationManager;
     private final EmailService emailService;
+
+    @Value("${reset.password.url}")
+    private String resetPasswordUrl;
 
     public AuthServiceImpl(
             UserRepository userRepository,
@@ -178,7 +181,7 @@ public class AuthServiceImpl implements AuthService {
                     .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng với email này"));
 
             String resetToken = jwtTokenUtil.generatePasswordResetToken(user.getEmail());
-            String resetLink = "http://localhost:3000/reset-password/" + resetToken;
+            String resetLink = resetPasswordUrl + resetToken;
 
             emailService.sendPasswordResetEmail(user.getEmail(), resetLink);
             return ResponseEntity.ok(new MessageResponse("Link đặt lại mật khẩu đã được gửi đến email của bạn"));

@@ -9,5 +9,5 @@ import com.orebi.entity.DiscountProduct;
 
 @Repository
 public interface DiscountProductRepository extends JpaRepository<DiscountProduct, Long> {
-    Optional<DiscountProduct> findByProductIdAndDiscountCodeId(Long productId, Long DiscountCodeId);
+    Optional<DiscountProduct> findByProduct_ProductIdAndDiscountCodeId(Long productId, Long DiscountCodeId);
 }

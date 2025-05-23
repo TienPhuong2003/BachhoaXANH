@@ -36,21 +36,21 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         String username = null;
         String jwt = null;
 
-        // Lấy token từ header Authorization
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwt = authorizationHeader.substring(7);
             username = jwtTokenUtil.extractUsername(jwt);
         }
-        
+
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-            // Xác thực token
             if (jwtTokenUtil.validateToken(jwt, userDetails)) {
                 Long userId = jwtTokenUtil.extractClaim(jwt, claims -> claims.get("userId", Long.class));
                 String role = jwtTokenUtil.extractClaim(jwt, claims -> claims.get("role", String.class));
-            
-                // Tạo một CustomUserDetails với userId
+
+                System.out.println("Extracted userId: " + userId);
+                System.out.println("Extracted role: " + role);
+
                 CustomUserDetails customUserDetails = new CustomUserDetails(
                         userDetails.getUsername(),
                         userDetails.getPassword(),
@@ -58,17 +58,18 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                         userId,
                         role
                 );
-            
-                // Tạo authentication token với CustomUserDetails
+
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         customUserDetails, null, customUserDetails.getAuthorities());
-            
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-            
+
                 SecurityContextHolder.getContext().setAuthentication(authToken);
-            }            
+
+                // Log để kiểm tra SecurityContextHolder
+                System.out.println("Authentication set in SecurityContext: " + SecurityContextHolder.getContext().getAuthentication());
+            }
         }
-        // Tiến hành filter tiếp theo trong chuỗi
+
         chain.doFilter(request, response);
     }
 }

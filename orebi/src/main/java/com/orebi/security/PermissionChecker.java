@@ -2,19 +2,17 @@ package com.orebi.security;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.orebi.entity.Permission;
 import com.orebi.entity.Resource;
 import com.orebi.entity.Role;
-import com.orebi.entity.User;
 import com.orebi.repository.PermissionRepository;
 import com.orebi.repository.ResourceRepository;
 import com.orebi.repository.RoleRepository;
 import com.orebi.repository.UserPermissionRepository;
 import com.orebi.repository.RolePermissionRepository;
 import com.orebi.repository.PermissionResourceRepository;
-
-import java.util.Optional;
 
 @Component
 public class PermissionChecker {
@@ -27,11 +25,11 @@ public class PermissionChecker {
     private final UserPermissionRepository userPermissionRepository;
 
     public PermissionChecker(RoleRepository roleRepository,
-            PermissionRepository permissionRepository,
-            ResourceRepository resourceRepository,
-            RolePermissionRepository rolePermissionRepository,
-            PermissionResourceRepository permissionResourceRepository,
-            UserPermissionRepository userPermissionRepository) {
+                             PermissionRepository permissionRepository,
+                             ResourceRepository resourceRepository,
+                             RolePermissionRepository rolePermissionRepository,
+                             PermissionResourceRepository permissionResourceRepository,
+                             UserPermissionRepository userPermissionRepository) {
         this.roleRepository = roleRepository;
         this.permissionRepository = permissionRepository;
         this.resourceRepository = resourceRepository;
@@ -40,54 +38,51 @@ public class PermissionChecker {
         this.userPermissionRepository = userPermissionRepository;
     }
 
+    @Transactional(readOnly = true)
     public boolean hasRolePermission(String permissionName, String resourceName) {
-        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication()
-                .getPrincipal();
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal == null || "anonymousUser".equals(principal)) {
+            return true;
+        }
+
+        Permission permission = permissionRepository.findByPermissionName(permissionName)
+                .orElseThrow(() -> new IllegalArgumentException("Permission not found: " + permissionName));
+
+
+        CustomUserDetails userDetails = (CustomUserDetails) principal;
         String userRole = userDetails.getRole();
 
-        Optional<Role> roleOpt = roleRepository.findByRoleName(userRole);
-        if (!roleOpt.isPresent()) {
-            return false;
-        }
-        Role role = roleOpt.get();
+        Role role = roleRepository.findByRoleName(userRole)
+                .orElseThrow(() -> new IllegalArgumentException("Role not found: " + userRole));
 
-        Optional<Permission> permissionOpt = permissionRepository.findByPermissionName(permissionName);
-        if (!permissionOpt.isPresent()) {
-            return false;
-        }
-        Permission permission = permissionOpt.get();
-
-        boolean hasRolePermission = rolePermissionRepository.existsByRoleIdAndPermissionIdAndEnable(role.getId(),
-                permission.getId(), true);
-        if (!hasRolePermission) {
-            return false;
-        }
-
-        Optional<Resource> resourceOpt = resourceRepository.findByResourceName(resourceName);
-        if (!resourceOpt.isPresent()) {
-            return false;
-        }
-        Resource resource = resourceOpt.get();
-
-        return permissionResourceRepository.existsByPermissionIdAndResourceIdAndEnable(permission.getId(),
-                resource.getId(), true);
+        return rolePermissionRepository.existsByRoleIdAndPermissionIdAndEnable(role.getId(), permission.getId(), true);
     }
 
-    boolean hasUserPermission(String permissionName, String resourceName) {
-        if (!hasRolePermission(permissionName, resourceName)) {
-            return false;
+    @Transactional(readOnly = true)
+    public boolean hasUserPermission(String permissionName, String resourceName) {
+
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal == null || "anonymousUser".equals(principal)) {
+            return true; 
         }
 
-        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication()
-                .getPrincipal();
+        CustomUserDetails userDetails = (CustomUserDetails) principal;
         Long userId = userDetails.getUserId();
 
-        Optional<Permission> permissionOpt = permissionRepository.findByPermissionName(permissionName);
-        if (!permissionOpt.isPresent()) {
-            return false;
+        Permission permission = permissionRepository.findByPermissionName(permissionName)
+                .orElseThrow(() -> new IllegalArgumentException("Permission not found: " + permissionName));
+
+        Resource resource = resourceRepository.findByResourceName(resourceName)
+                .orElseThrow(() -> new IllegalArgumentException("Resource not found: " + resourceName));
+
+        boolean hasUserPermission = userPermissionRepository.existsByUser_UserIdAndPermission_IdAndEnable(userId, permission.getId(), true)
+                && permissionResourceRepository.existsByPermissionIdAndResourceIdAndEnable(
+                permission.getId(), resource.getId(), true);
+
+        if (hasUserPermission) {
+            return true;
         }
-        Permission permission = permissionOpt.get();
-        
-        return userPermissionRepository.existsByUser_UserIdAndPermission_IdAndEnable(userId, permission.getId(), false);
+
+        return hasRolePermission(permissionName, resourceName);
     }
 }

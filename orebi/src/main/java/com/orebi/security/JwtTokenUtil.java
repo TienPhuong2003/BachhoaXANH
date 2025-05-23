@@ -56,6 +56,7 @@ public class JwtTokenUtil {
 
     protected <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
+        System.out.println("Claims: " + claims);
         return claimsResolver.apply(claims);
     }
 

@@ -7,6 +7,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "permission_resource")
@@ -24,6 +25,25 @@ public class PermissionResource {
     private Resource resource;
     
     private boolean enable;
+
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }   
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 
     public Long getId() {
         return id;

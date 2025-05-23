@@ -87,7 +87,7 @@ public class DiscountCodeServiceImpl implements DiscountCodeService {
 
         for (Product product : products) {
             Optional<DiscountProduct> existingDiscountProduct = discountProductRepository
-                    .findByProductIdAndDiscountCodeId(product.getProductId(), discountCode.getId());
+                    .findByProduct_ProductIdAndDiscountCodeId(product.getProductId(), discountCode.getId());
 
             if (existingDiscountProduct.isPresent()) {
                 if (existingDiscountProduct.get().isEnable()) {
