@@ -2,7 +2,6 @@ package com.orebi.service.productdetail.impl;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -10,9 +9,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orebi.dto.ProductDetailDTO;
 import com.orebi.entity.ProductDetail;
-import com.orebi.entity.ProductImage;
-import com.orebi.mapper.ProductImageMapper;
-import com.orebi.repository.ProductImageRepository;
 import com.orebi.service.productdetail.ProductDetailService;
 import com.orebi.repository.ProductDetailRepository;
 import com.orebi.mapper.ProductDetailMapper;

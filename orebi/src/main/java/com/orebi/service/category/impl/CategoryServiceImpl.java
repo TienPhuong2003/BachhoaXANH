@@ -54,7 +54,6 @@ public class CategoryServiceImpl implements CategoryService {
                 .orElseThrow(() -> new ResourceNotFoundException("Category with ID " + id + " not found"));
 
         category.setName(categoryDTO.getName());
-        category.setImage(categoryDTO.getImage());
 
         if (categoryDTO.getSubCategories() != null) {
             category.setSubCategories(subCategoryMapper.toEntityList(categoryDTO.getSubCategories()));

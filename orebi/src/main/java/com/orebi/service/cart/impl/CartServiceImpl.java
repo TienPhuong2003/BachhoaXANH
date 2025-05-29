@@ -173,7 +173,6 @@ public class CartServiceImpl implements CartService {
             detail.setTotalPrice(totalPrice);
             detail.setSnapshotProductId(product.getProductId());
             detail.setSnapshotProductName(product.getName());
-            detail.setSnapshotProductImage(product.getImage());
             detail.setSnapshotPrice(unitPrice);
 
             orderDetails.add(detail);

@@ -17,7 +17,6 @@ public class CategoryMapper implements EntityMapper<CategoryDTO, Category> {
         CategoryDTO dto = new CategoryDTO();
         dto.setCategoryId(entity.getCategoryId());
         dto.setName(entity.getName());
-        dto.setImage(entity.getImage());
         dto.setSubCategories(subCategoryMapper.toDTOList(entity.getSubCategories()));
         return dto;
     }
@@ -30,7 +29,6 @@ public class CategoryMapper implements EntityMapper<CategoryDTO, Category> {
         Category entity = new Category();
         entity.setCategoryId(dto.getCategoryId());
         entity.setName(dto.getName());
-        entity.setImage(dto.getImage());
         entity.setSubCategories(subCategoryMapper.toEntityList(dto.getSubCategories()));
         entity.getSubCategories().forEach(subCategory -> subCategory.setCategory(entity));
         return entity;

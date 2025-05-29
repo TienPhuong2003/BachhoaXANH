@@ -17,7 +17,6 @@ public class ProductMapper implements EntityMapper<ProductDTO, Product> {
         ProductDTO dto = new ProductDTO();
         dto.setProductId(product.getProductId());
         dto.setName(product.getName());
-        dto.setImage(product.getImage());
         dto.setOriginalPrice(product.getOriginalPrice());
         dto.setUnit(product.getUnit());
         dto.setDescription(product.getDescription());
@@ -50,7 +49,6 @@ public class ProductMapper implements EntityMapper<ProductDTO, Product> {
 
         Product product = new Product();
         product.setName(dto.getName());
-        product.setImage(dto.getImage());
         product.setOriginalPrice(dto.getOriginalPrice());
         product.setUnit(dto.getUnit());
         product.setDescription(dto.getDescription());

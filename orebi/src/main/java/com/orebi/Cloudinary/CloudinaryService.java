@@ -15,16 +15,15 @@ public class CloudinaryService {
     @Autowired
     private Cloudinary cloudinary;
 
-    public CloudinaryUploadResponse uploadFile(MultipartFile file) {
+    public CloudinaryUploadResponse uploadFile(MultipartFile file, String folderName) {
         try {
             Map<?, ?> result = cloudinary.uploader().upload(
                 file.getBytes(),
                 ObjectUtils.asMap(
                     "resource_type", "auto",
-                    "folder", "orebi"
+                    "folder", folderName
                 )
             );
-            
             String url = result.get("secure_url").toString();
             String publicId = result.get("public_id").toString();
             

@@ -6,16 +6,28 @@ public class UserDTO {
     private String name;
     private String email;
     private String phone;
+    private String address;
+
 
     public UserDTO() {}
 
     public UserDTO(User user) {
+        this.address = user.getAddress();
         this.name = user.getName();
         this.email = user.getEmail();
         this.phone = user.getPhone();
     }
 
     // Getters and Setters
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
 
     public String getName() {
         return name;

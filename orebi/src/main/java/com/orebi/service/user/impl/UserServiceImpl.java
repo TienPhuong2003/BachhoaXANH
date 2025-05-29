@@ -46,9 +46,10 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public Optional<UserDTO> updateUser(Long userId, UserDTO userDTO) {
         return userRepository.findById(userId).map(existingUser -> {
-            existingUser.setName(userDTO.getName());
-            existingUser.setEmail(userDTO.getEmail());
-            existingUser.setPhone(userDTO.getPhone());
+            Optional.ofNullable(userDTO.getAddress()).ifPresent(existingUser::setAddress);
+            Optional.ofNullable(userDTO.getName()).ifPresent(existingUser::setName);
+            Optional.ofNullable(userDTO.getEmail()).ifPresent(existingUser::setEmail);
+            Optional.ofNullable(userDTO.getPhone()).ifPresent(existingUser::setPhone);
 
             User updatedUser = userRepository.save(existingUser);
             return userMapper.toDTO(updatedUser);

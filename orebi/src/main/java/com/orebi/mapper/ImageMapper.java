@@ -1,34 +1,37 @@
 package com.orebi.mapper;
 
-import com.orebi.dto.ProductImageDTO;
-import com.orebi.entity.ProductImage;
+import com.orebi.dto.ImageDTO;
+import com.orebi.entity.Image;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ProductImageMapper implements EntityMapper<ProductImageDTO, ProductImage> {
+public class ImageMapper implements EntityMapper<ImageDTO, Image> {
 
     @Override
-    public ProductImageDTO toDTO(ProductImage entity) {
+    public ImageDTO toDTO(Image entity) {
         if (entity == null) {
             return null;
         }
-        ProductImageDTO dto = new ProductImageDTO();
+        ImageDTO dto = new ImageDTO();
         dto.setImageId(entity.getImageId());
         dto.setImageUrl(entity.getImageUrl());
         dto.setPublicId(entity.getPublicId());
-        dto.setProductDetailId(entity.getProductDetail() != null ? entity.getProductDetail().getProductDetailId() : null);
+        dto.setTargetId(entity.getTargetId());
+        dto.setTargetType(entity.getTargetType());
         return dto;
     }
 
     @Override
-    public ProductImage toEntity(ProductImageDTO dto) {
+    public Image toEntity(ImageDTO dto) {
         if (dto == null) {
             return null;
         }
-        ProductImage entity = new ProductImage();
+        Image entity = new Image();
         entity.setImageId(dto.getImageId());
         entity.setImageUrl(dto.getImageUrl());
         entity.setPublicId(dto.getPublicId());
+        entity.setTargetId(dto.getTargetId());
+        entity.setTargetType(dto.getTargetType());
         return entity;
     }
 }

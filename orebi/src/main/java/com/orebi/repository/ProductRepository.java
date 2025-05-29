@@ -11,6 +11,5 @@ import com.orebi.entity.Category;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByCategory(Category category);
-
     List<Product> findBySubCategory(SubCategory subCategory);
 }

@@ -12,7 +12,6 @@ public class Product {
     private Long productId;
 
     private String name;
-    private String image;
     private double originalPrice;
     private double discountedPrice;
     private String unit;
@@ -23,11 +22,11 @@ public class Product {
     private ProductDetail productDetail;
 
     @ManyToOne
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "category_id",nullable = true)
     private Category category;
 
     @ManyToOne
-    @JoinColumn(name = "sub_category_id")
+    @JoinColumn(name = "sub_category_id", nullable = true)
     private SubCategory subCategory;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
@@ -51,14 +50,6 @@ public class Product {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getImage() {
-        return this.image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
     }
 
     public double getOriginalPrice() {

@@ -31,8 +31,6 @@ public class ProductDetail {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @OneToMany(mappedBy = "productDetail", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProductImage> images = new ArrayList<>();
 
     // Getters and Setters
     public Long getProductDetailId() {
@@ -67,22 +65,4 @@ public class ProductDetail {
         this.product = product;
     }
 
-    public List<ProductImage> getImages() {
-        return images;
-    }
-
-    public void setImages(List<ProductImage> images) {
-        this.images = images;
-    }
-
-    // Helper methods
-    public void addImage(ProductImage image) {
-        images.add(image);
-        image.setProductDetail(this);
-    }
-
-    public void removeImage(ProductImage image) {
-        images.remove(image);
-        image.setProductDetail(null);
-    }
 }

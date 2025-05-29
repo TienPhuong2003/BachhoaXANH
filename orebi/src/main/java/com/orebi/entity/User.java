@@ -29,6 +29,8 @@ public class User {
     
     private String phone;
 
+    private String address;
+
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
@@ -113,4 +115,10 @@ public class User {
         this.role = role;
     }
 
+    public String getAddress() {
+        return address;
+    }
+    public void setAddress(String address) {
+        this.address = address;
+    }
 }

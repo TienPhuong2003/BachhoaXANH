@@ -7,10 +7,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class ProductDetailMapper implements EntityMapper<ProductDetailDTO, ProductDetail> {
 
-    private final ProductImageMapper productImageMapper;
+    private final ImageMapper imageMapper;
 
-    public ProductDetailMapper(ProductImageMapper productImageMapper) {
-        this.productImageMapper = productImageMapper;
+    public ProductDetailMapper(ImageMapper imageMapper) {
+        this.imageMapper = imageMapper;
     }
 
     @Override
@@ -23,7 +23,6 @@ public class ProductDetailMapper implements EntityMapper<ProductDetailDTO, Produ
         dto.setDescription(entity.getDescription());
         dto.setDestable(entity.getDestable());
         dto.setProductId(entity.getProduct() != null ? entity.getProduct().getProductId() : null);
-        dto.setImages(productImageMapper.toDTOList(entity.getImages()));
         return dto;
     }
 
@@ -36,7 +35,6 @@ public class ProductDetailMapper implements EntityMapper<ProductDetailDTO, Produ
         entity.setProductDetailId(dto.getProductDetailId());
         entity.setDescription(dto.getDescription());
         entity.setDestable(dto.getDestable());
-        entity.setImages(productImageMapper.toEntityList(dto.getImages()));
         return entity;
     }
 }

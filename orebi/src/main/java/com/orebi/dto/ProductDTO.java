@@ -3,7 +3,6 @@ package com.orebi.dto;
 public class ProductDTO {
     private Long productId;
     private String name;
-    private String image;
     private double originalPrice;
     private String unit;
     private String description;
@@ -30,14 +29,6 @@ public class ProductDTO {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
     }
 
     public double getOriginalPrice() {

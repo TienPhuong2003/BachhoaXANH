@@ -1,10 +1,11 @@
 package com.orebi.dto;
 
-public class ProductImageDTO {
+public class ImageDTO {
     private Long imageId;
     private String imageUrl;
     private String publicId;
-    private Long productDetailId;
+    private String targetId;
+    private String targetType;
 
     public Long getImageId() {
         return imageId;
@@ -30,11 +31,21 @@ public class ProductImageDTO {
         this.publicId = publicId;
     }
 
-    public Long getProductDetailId() {
-        return productDetailId;
+    public String getTargetId() {
+        return targetId;
     }
 
-    public void setProductDetailId(Long productDetailId) {
-        this.productDetailId = productDetailId;
+    public void setTargetId(String targetId) {
+        this.targetId = targetId;
     }
+
+    public String getTargetType() {
+        return targetType;
+    }
+
+    public void setTargetType(String targetType) {
+        this.targetType = targetType;
+    }
+
+    
 }

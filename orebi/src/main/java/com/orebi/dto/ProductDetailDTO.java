@@ -7,7 +7,6 @@ public class ProductDetailDTO {
     private String description;
     private String destable;
     private Long productId;
-    private List<ProductImageDTO> images;
     
     public Long getProductDetailId() {
         return productDetailId;
@@ -41,11 +40,4 @@ public class ProductDetailDTO {
         this.productId = productId;
     }
 
-    public List<ProductImageDTO> getImages() {
-        return images;
-    }
-
-    public void setImages(List<ProductImageDTO> images) {
-        this.images = images;
-    }
 }
