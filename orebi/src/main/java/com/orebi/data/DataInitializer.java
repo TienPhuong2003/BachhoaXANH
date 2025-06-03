@@ -3,25 +3,35 @@ package com.orebi.data;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.boot.CommandLineRunner;
 
-import com.orebi.entity.*;
-import com.orebi.repository.*;
+import com.orebi.entity.Permission;
+import com.orebi.entity.PermissionResource;
+import com.orebi.entity.Resource;
+import com.orebi.entity.Role;
+import com.orebi.entity.RolePermission;
+import com.orebi.entity.User;
+import com.orebi.repository.PermissionRepository;
+import com.orebi.repository.PermissionResourceRepository;
+import com.orebi.repository.ResourceRepository;
+import com.orebi.repository.RolePermissionRepository;
+import com.orebi.repository.RoleRepository;
+import com.orebi.repository.UserRepository;
 
 @Configuration
 public class DataInitializer {
 
     @Bean
     public CommandLineRunner initData(RoleRepository roleRepository,
-                                      PermissionRepository permissionRepository,
-                                      UserRepository userRepository,
-                                      PasswordEncoder passwordEncoder,
-                                      ResourceRepository resourceRepository,
-                                      PermissionResourceRepository permissionResourceRepository,
-                                      RolePermissionRepository rolePermissionRepository) {
+            PermissionRepository permissionRepository,
+            UserRepository userRepository,
+            PasswordEncoder passwordEncoder,
+            ResourceRepository resourceRepository,
+            PermissionResourceRepository permissionResourceRepository,
+            RolePermissionRepository rolePermissionRepository) {
         return args -> {
             // Tạo role mặc định nếu chưa tồn tại
             Role adminRole = getOrCreateRole(roleRepository, "ROLE_ADMIN");
@@ -57,7 +67,7 @@ public class DataInitializer {
     }
 
     private void createDefaultUser(UserRepository userRepository, PasswordEncoder passwordEncoder,
-                                   String email, String password, String name, Role role) {
+            String email, String password, String name, Role role) {
         Optional<User> existingUser = userRepository.findByEmail(email);
         if (existingUser.isEmpty()) {
             User user = new User();
@@ -66,6 +76,7 @@ public class DataInitializer {
             user.setName(name);
             user.setRole(role);
             user.setOtpVerified(true);
+            user.setActive(true);
             userRepository.save(user);
         }
     }
@@ -99,8 +110,8 @@ public class DataInitializer {
     }
 
     private void assignPermissionsToResources(PermissionRepository permissionRepository,
-                                              ResourceRepository resourceRepository,
-                                              PermissionResourceRepository permissionResourceRepository) {
+            ResourceRepository resourceRepository,
+            PermissionResourceRepository permissionResourceRepository) {
         for (String resourceName : DefaultData.getDefaultResources()) {
             Resource resource = resourceRepository.findByResourceName(resourceName)
                     .orElseThrow(() -> new IllegalArgumentException("Resource not found: " + resourceName));
@@ -109,7 +120,8 @@ public class DataInitializer {
                 Permission permission = permissionRepository.findByPermissionName(permissionName)
                         .orElseThrow(() -> new IllegalArgumentException("Permission not found: " + permissionName));
 
-                if (!permissionResourceRepository.existsByPermissionIdAndResourceIdAndEnable(permission.getId(), resource.getId(), true)) {
+                if (!permissionResourceRepository.existsByPermissionIdAndResourceIdAndEnable(permission.getId(),
+                        resource.getId(), true)) {
                     PermissionResource permissionResource = new PermissionResource();
                     permissionResource.setPermission(permission);
                     permissionResource.setResource(resource);
@@ -123,8 +135,8 @@ public class DataInitializer {
     }
 
     private void assignDefaultPermissionsToRoles(RoleRepository roleRepository,
-                                                 PermissionRepository permissionRepository,
-                                                 RolePermissionRepository rolePermissionRepository) {
+            PermissionRepository permissionRepository,
+            RolePermissionRepository rolePermissionRepository) {
         Role adminRole = roleRepository.findByRoleName("ROLE_ADMIN")
                 .orElseThrow(() -> new IllegalArgumentException("Role not found: ROLE_ADMIN"));
 
@@ -132,7 +144,8 @@ public class DataInitializer {
             Permission permission = permissionRepository.findByPermissionName(perm)
                     .orElseThrow(() -> new IllegalArgumentException("Permission not found: " + perm));
 
-            if (!rolePermissionRepository.existsByRoleIdAndPermissionIdAndEnable(adminRole.getId(), permission.getId(), true)) {
+            if (!rolePermissionRepository.existsByRoleIdAndPermissionIdAndEnable(adminRole.getId(), permission.getId(),
+                    true)) {
                 RolePermission rolePermission = new RolePermission();
                 rolePermission.setRole(adminRole);
                 rolePermission.setPermission(permission);
@@ -150,7 +163,8 @@ public class DataInitializer {
             Permission permission = permissionRepository.findByPermissionName(perm)
                     .orElseThrow(() -> new IllegalArgumentException("Permission not found: " + perm));
 
-            if (!rolePermissionRepository.existsByRoleIdAndPermissionIdAndEnable(userRole.getId(), permission.getId(), true)) {
+            if (!rolePermissionRepository.existsByRoleIdAndPermissionIdAndEnable(userRole.getId(), permission.getId(),
+                    true)) {
                 RolePermission rolePermission = new RolePermission();
                 rolePermission.setRole(userRole);
                 rolePermission.setPermission(permission);

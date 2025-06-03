@@ -10,4 +10,6 @@ import com.orebi.entity.Image;
 @Repository
 public interface ImageRepository extends JpaRepository<Image, Long> {
    List<Image> findByTargetIdAndTargetType(String targetId, String targetType);
+
+   List<Image> findByTargetIdAndTargetTypeAndImageUrl(String targetId, String targetType, String imageUrl);
 }

@@ -1,13 +1,11 @@
 package com.orebi.dto;
 
-import java.util.List;
-
 public class ProductDetailDTO {
     private Long productDetailId;
     private String description;
     private String destable;
     private Long productId;
-    
+
     public Long getProductDetailId() {
         return productDetailId;
     }

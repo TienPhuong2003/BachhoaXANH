@@ -9,9 +9,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orebi.dto.ProductDetailDTO;
 import com.orebi.entity.ProductDetail;
-import com.orebi.service.productdetail.ProductDetailService;
-import com.orebi.repository.ProductDetailRepository;
 import com.orebi.mapper.ProductDetailMapper;
+import com.orebi.repository.ProductDetailRepository;
+import com.orebi.service.productdetail.ProductDetailService;
 
 @Service
 public class ProductDetailServiceImpl implements ProductDetailService {
@@ -36,7 +36,7 @@ public class ProductDetailServiceImpl implements ProductDetailService {
 
     @Override
     public ProductDetailDTO getProductDetailById(Long productId) {
-        Optional<ProductDetail> product = productDetailRepository.findById(productId);
+        Optional<ProductDetail> product = productDetailRepository.findByProduct_ProductId(productId);
         return product.map(productDetailMapper::toDTO).orElse(null);
     }
 
@@ -72,7 +72,7 @@ public class ProductDetailServiceImpl implements ProductDetailService {
 
                         ProductDetail savedDetail = productDetailRepository.save(existingDetail);
 
-                        return productDetailMapper.toDTO(savedDetail); 
+                        return productDetailMapper.toDTO(savedDetail);
                     } catch (JsonProcessingException e) {
                         throw new IllegalArgumentException("Dữ liệu destable không hợp lệ", e);
                     }

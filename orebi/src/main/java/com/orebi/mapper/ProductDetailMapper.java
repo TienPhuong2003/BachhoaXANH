@@ -1,17 +1,13 @@
 package com.orebi.mapper;
 
-import com.orebi.dto.ProductDetailDTO;
-import com.orebi.entity.ProductDetail;
 import org.springframework.stereotype.Component;
+
+import com.orebi.dto.ProductDetailDTO;
+import com.orebi.entity.Product;
+import com.orebi.entity.ProductDetail;
 
 @Component
 public class ProductDetailMapper implements EntityMapper<ProductDetailDTO, ProductDetail> {
-
-    private final ImageMapper imageMapper;
-
-    public ProductDetailMapper(ImageMapper imageMapper) {
-        this.imageMapper = imageMapper;
-    }
 
     @Override
     public ProductDetailDTO toDTO(ProductDetail entity) {
@@ -35,6 +31,11 @@ public class ProductDetailMapper implements EntityMapper<ProductDetailDTO, Produ
         entity.setProductDetailId(dto.getProductDetailId());
         entity.setDescription(dto.getDescription());
         entity.setDestable(dto.getDestable());
+        if (dto.getProductId() != null) {
+            Product product = new Product();
+            product.setProductId(dto.getProductId());
+            entity.setProduct(product);
+        }
         return entity;
     }
 }

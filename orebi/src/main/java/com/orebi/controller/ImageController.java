@@ -23,11 +23,11 @@ public class ImageController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<ImageDTO> uploadImage(@RequestParam String targetId,
+    public ResponseEntity<List<ImageDTO>> uploadImage(@RequestParam String targetId,
             @RequestParam String targetType,
-            @RequestParam("file") MultipartFile imageFile) {
+            @RequestParam("file") List<MultipartFile> imageFile) {
 
-        ImageDTO uploadImage = imageService.uploadImage(targetId, targetType, imageFile);
+        List<ImageDTO> uploadImage = imageService.uploadImage(targetId, targetType, imageFile);
         return ResponseEntity.ok(uploadImage);
     }
 
@@ -36,4 +36,15 @@ public class ImageController {
         List<String> imageUrl = imageService.getImage(targetId, targetType);
         return ResponseEntity.ok(imageUrl);
     }
+
+    @PostMapping("/updateImage")
+    public ResponseEntity<List<ImageDTO>> updateImage(@RequestParam String targetId,
+            @RequestParam String targetType,
+            @RequestParam List<String> imageUrls,
+            @RequestParam("file") List<MultipartFile> newImageFile) {
+
+        List<ImageDTO> updatedImages = imageService.updateImage(targetId, targetType, imageUrls, newImageFile);
+        return ResponseEntity.ok(updatedImages);
+    }
+
 }

@@ -28,23 +28,29 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public ImageDTO uploadImage(String targetId, String targetType, MultipartFile imageFile) {
+    public List<ImageDTO> uploadImage(String targetId, String targetType, List<MultipartFile> imageFile) {
         String folderName = switch (targetType) {
             case "PRODUCT" -> "orebi/Product";
             case "CATEGORY" -> "orebi/Category";
             case "SUB_CATEGORY" -> "orebi/SubCategory";
+            case "PRODUCT_DETAIL" -> "orebi/ProductDetail";
             default -> throw new IllegalArgumentException("Invalid target type: " + targetType);
         };
-        CloudinaryUploadResponse uploadResponse = cloudinaryService.uploadFile(imageFile, folderName);
 
-        Image image = new Image();
-        image.setTargetId(targetId);
-        image.setTargetType(targetType);
-        image.setPublicId(uploadResponse.getPublicId());
-        image.setImageUrl(uploadResponse.getUrl());
+        List<ImageDTO> result = new java.util.ArrayList<>();
+        for (MultipartFile file : imageFile) {
+            CloudinaryUploadResponse uploadResponse = cloudinaryService.uploadFile(file, folderName);
 
-        Image savedImage = imageRepository.save(image);
-        return imageMapper.toDTO(savedImage);
+            Image image = new Image();
+            image.setTargetId(targetId);
+            image.setTargetType(targetType);
+            image.setPublicId(uploadResponse.getPublicId());
+            image.setImageUrl(uploadResponse.getUrl());
+
+            Image savedImage = imageRepository.save(image);
+            result.add(imageMapper.toDTO(savedImage));
+        }
+        return result;
     }
 
     @Override
@@ -56,4 +62,19 @@ public class ImageServiceImpl implements ImageService {
         return images.stream().map(Image::getImageUrl).collect(Collectors.toList());
     }
 
+    @Override
+    public List<ImageDTO> updateImage(String targetId, String targetType, List<String> imageUrls,
+            List<MultipartFile> newImageFiles) {
+        if (imageUrls != null && !imageUrls.isEmpty()) {
+            for (String imageUrl : imageUrls) {
+                List<Image> images = imageRepository.findByTargetIdAndTargetTypeAndImageUrl(targetId, targetType,
+                        imageUrl);
+                for (Image image : images) {
+                    cloudinaryService.deleteFile(image.getPublicId());
+                    imageRepository.delete(image);
+                }
+            }
+        }
+        return uploadImage(targetId, targetType, newImageFiles);
+    }
 }

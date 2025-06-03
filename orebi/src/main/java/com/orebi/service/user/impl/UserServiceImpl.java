@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
             Optional.ofNullable(userDTO.getName()).ifPresent(existingUser::setName);
             Optional.ofNullable(userDTO.getEmail()).ifPresent(existingUser::setEmail);
             Optional.ofNullable(userDTO.getPhone()).ifPresent(existingUser::setPhone);
-
+            Optional.ofNullable(userDTO.isActive()).ifPresent(existingUser::setActive);
             User updatedUser = userRepository.save(existingUser);
             return userMapper.toDTO(updatedUser);
         });
