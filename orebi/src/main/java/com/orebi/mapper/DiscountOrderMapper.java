@@ -2,17 +2,18 @@ package com.orebi.mapper;
 
 import org.springframework.stereotype.Component;
 
-import com.orebi.dto.DiscountDTO.DiscountProductDTO;
+import com.orebi.dto.DiscountDTO.DiscountOrderDTO;
 import com.orebi.entity.Discount;
 import com.orebi.entity.DiscountType;
 
 @Component
-public class DiscountProductMapper implements EntityMapper<DiscountProductDTO, Discount> {
+public class DiscountOrderMapper implements EntityMapper<DiscountOrderDTO, Discount> {
+
     @Override
-    public DiscountProductDTO toDTO(Discount entity) {
+    public DiscountOrderDTO toDTO(Discount entity) {
         if (entity == null)
             return null;
-        DiscountProductDTO dto = new DiscountProductDTO();
+        DiscountOrderDTO dto = new DiscountOrderDTO();
         dto.setId(entity.getId());
         dto.setCode(entity.getCode());
         dto.setDescription(entity.getDescription());
@@ -22,11 +23,13 @@ public class DiscountProductMapper implements EntityMapper<DiscountProductDTO, D
         dto.setType(entity.getType() != null ? entity.getType().name() : null);
         dto.setDiscountValue(entity.getDiscountValue());
         dto.setPercentage(entity.isPercentage());
+        dto.setMinOrderValue(entity.getMinOrderValue());
+        dto.setMaxOrderValue(entity.getMaxOrderValue());
         return dto;
     }
 
     @Override
-    public Discount toEntity(DiscountProductDTO dto) {
+    public Discount toEntity(DiscountOrderDTO dto) {
         if (dto == null)
             return null;
         Discount entity = new Discount();
@@ -41,6 +44,8 @@ public class DiscountProductMapper implements EntityMapper<DiscountProductDTO, D
         }
         entity.setDiscountValue(dto.getDiscountValue());
         entity.setPercentage(dto.isPercentage());
+        entity.setMinOrderValue(dto.getMinOrderValue());
+        entity.setMaxOrderValue(dto.getMaxOrderValue());
         return entity;
     }
 }

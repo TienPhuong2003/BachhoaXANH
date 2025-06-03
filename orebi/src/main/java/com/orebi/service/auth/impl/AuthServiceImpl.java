@@ -116,6 +116,11 @@ public class AuthServiceImpl implements AuthService {
                 return ResponseEntity.badRequest()
                         .body(new MessageResponse("Tài khoản chưa xác thực. OTP mới đã được gửi đến email."));
             }
+            if (!user.isActive()) {
+                return ResponseEntity.badRequest()
+                        .body(new MessageResponse(
+                                "Tài khoản của bạn đã bị khóa. Vui lòng liên hệ admin để biết thêm thông tin."));
+            }
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             loginDTO.getEmail(),
@@ -138,19 +143,20 @@ public class AuthServiceImpl implements AuthService {
                 .orElseThrow(() -> new RuntimeException("không tìm thấy người dùng"));
 
         if (!user.getOtp().equals(otp)) {
-            return ResponseEntity.badRequest().body("Invalid OTP");
+            return ResponseEntity.badRequest().body(new MessageResponse("OTP không chính xác"));
         }
 
         if (LocalDateTime.now().isAfter(user.getOtpExpiredAt())) {
-            return ResponseEntity.badRequest().body("OTP has expired");
+            return ResponseEntity.badRequest().body(new MessageResponse("OTP đã hết hạn"));
         }
 
         user.setOtpVerified(true);
         user.setOtp(null);
         user.setOtpExpiredAt(null);
+        user.setActive(true);
         userRepository.save(user);
 
-        return ResponseEntity.ok("Xác thực tài khoàn thành công");
+        return ResponseEntity.ok(new MessageResponse("Xác thực tài khoàn thành công"));
     }
 
     // Đặt lại mật khẩu

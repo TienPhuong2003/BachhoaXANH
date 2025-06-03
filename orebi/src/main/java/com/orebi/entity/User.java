@@ -17,19 +17,21 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
-    
+
     @Column(nullable = false)
     private String name;
-    
+
     @Column(unique = true, nullable = false)
     private String email;
-    
+
     @Column(nullable = false)
     private String password;
-    
+
     private String phone;
 
     private String address;
+
+    private boolean isActive;
 
     @ManyToOne
     @JoinColumn(name = "role_id")
@@ -37,10 +39,9 @@ public class User {
 
     private boolean otpVerified = false;
     private String otp;
-    
+
     @Column(name = "otp_expired_at")
     private LocalDateTime otpExpiredAt;
-    
 
     // Getters and Setters
     public Long getUserId() {
@@ -118,7 +119,17 @@ public class User {
     public String getAddress() {
         return address;
     }
+
     public void setAddress(String address) {
         this.address = address;
     }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean isActive) {
+        this.isActive = isActive;
+    }
+
 }

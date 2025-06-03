@@ -1,15 +1,18 @@
 package com.orebi.service.image.impl;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.orebi.Cloudinary.CloudinaryService;
 import com.orebi.Cloudinary.CloudinaryUploadResponse;
 import com.orebi.dto.ImageDTO;
+import com.orebi.entity.Image;
 import com.orebi.mapper.ImageMapper;
 import com.orebi.repository.ImageRepository;
 import com.orebi.service.image.ImageService;
-import com.orebi.entity.Image;
 
 @Service
 public class ImageServiceImpl implements ImageService {
@@ -45,11 +48,12 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public String getImage(String targetId, String targetType) {
-        Image image = imageRepository.findByTargetIdAndTargetType(targetId, targetType)
-                .orElseThrow(() -> new RuntimeException(
-                        "Image not found for targetId: " + targetId + " and targetType: " + targetType));
-        return image.getImageUrl();
+    public List<String> getImage(String targetId, String targetType) {
+        List<Image> images = imageRepository.findByTargetIdAndTargetType(targetId, targetType);
+        if (images.isEmpty()) {
+            throw new RuntimeException("No images found for targetId: " + targetId + " and targetType: " + targetType);
+        }
+        return images.stream().map(Image::getImageUrl).collect(Collectors.toList());
     }
 
 }

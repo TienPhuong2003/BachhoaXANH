@@ -3,7 +3,10 @@ package com.orebi.mapper;
 import org.springframework.stereotype.Component;
 
 import com.orebi.dto.ProductDTO;
-import com.orebi.entity.*;
+import com.orebi.entity.Category;
+import com.orebi.entity.Discount;
+import com.orebi.entity.Product;
+import com.orebi.entity.SubCategory;
 
 @Component
 public class ProductMapper implements EntityMapper<ProductDTO, Product> {
@@ -30,12 +33,8 @@ public class ProductMapper implements EntityMapper<ProductDTO, Product> {
             dto.setSubCategoryId(product.getSubCategory().getSubCategoryId());
         }
 
-        if (product.getProductDetail() != null) {
-            dto.setProductDetailId(product.getProductDetail().getProductDetailId());
-        }
-
-        if (product.getAppliedDiscountCode() != null) {
-            dto.setAppliedDiscountCodeId(product.getAppliedDiscountCode().getId());
+        if (product.getDiscount() != null) {
+            dto.setDiscountId(product.getDiscount().getId());
         }
 
         return dto;
@@ -65,16 +64,10 @@ public class ProductMapper implements EntityMapper<ProductDTO, Product> {
             product.setSubCategory(subCategory);
         }
 
-        if (dto.getProductDetailId() != null) {
-            ProductDetail productDetail = new ProductDetail();
-            productDetail.setProductDetailId(dto.getProductDetailId());
-            product.setProductDetail(productDetail);
-        }
-
-        if (dto.getAppliedDiscountCodeId() != null) {
-            DiscountCode discountCode = new DiscountCode();
-            discountCode.setId(dto.getAppliedDiscountCodeId());
-            product.setAppliedDiscountCode(discountCode);
+        if (dto.getDiscountId() != null) {
+            Discount discountCode = new Discount();
+            discountCode.setId(dto.getDiscountId());
+            product.setDiscount(discountCode);
         }
 
         return product;

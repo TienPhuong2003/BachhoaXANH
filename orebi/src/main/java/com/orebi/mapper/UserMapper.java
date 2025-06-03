@@ -14,6 +14,8 @@ public class UserMapper implements EntityMapper<UserDTO, User> {
             return null;
         }
         UserDTO dto = new UserDTO();
+        dto.setActive(entity.isActive());
+        dto.setUserId(entity.getUserId());
         dto.setAddress(entity.getAddress());
         dto.setName(entity.getName());
         dto.setEmail(entity.getEmail());
@@ -27,6 +29,8 @@ public class UserMapper implements EntityMapper<UserDTO, User> {
             return null;
         }
         User entity = new User();
+        entity.setActive(dto.isActive());
+        entity.setUserId(dto.getUserId());
         entity.setAddress(dto.getAddress());
         entity.setName(dto.getName());
         entity.setEmail(dto.getEmail());

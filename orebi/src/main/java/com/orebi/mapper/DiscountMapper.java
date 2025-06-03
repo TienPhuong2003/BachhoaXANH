@@ -2,17 +2,18 @@ package com.orebi.mapper;
 
 import org.springframework.stereotype.Component;
 
-import com.orebi.dto.DiscountDTO.DiscountProductDTO;
+import com.orebi.dto.DiscountDTO.DiscountBaseDTO;
 import com.orebi.entity.Discount;
 import com.orebi.entity.DiscountType;
 
 @Component
-public class DiscountProductMapper implements EntityMapper<DiscountProductDTO, Discount> {
+public class DiscountMapper implements EntityMapper<DiscountBaseDTO, Discount> {
+
     @Override
-    public DiscountProductDTO toDTO(Discount entity) {
+    public DiscountBaseDTO toDTO(Discount entity) {
         if (entity == null)
             return null;
-        DiscountProductDTO dto = new DiscountProductDTO();
+        DiscountBaseDTO dto = new DiscountBaseDTO();
         dto.setId(entity.getId());
         dto.setCode(entity.getCode());
         dto.setDescription(entity.getDescription());
@@ -20,13 +21,11 @@ public class DiscountProductMapper implements EntityMapper<DiscountProductDTO, D
         dto.setStartDate(entity.getStartDate() != null ? entity.getStartDate().toLocalDate() : null);
         dto.setEndDate(entity.getEndDate() != null ? entity.getEndDate().toLocalDate() : null);
         dto.setType(entity.getType() != null ? entity.getType().name() : null);
-        dto.setDiscountValue(entity.getDiscountValue());
-        dto.setPercentage(entity.isPercentage());
         return dto;
     }
 
     @Override
-    public Discount toEntity(DiscountProductDTO dto) {
+    public Discount toEntity(DiscountBaseDTO dto) {
         if (dto == null)
             return null;
         Discount entity = new Discount();
@@ -39,8 +38,7 @@ public class DiscountProductMapper implements EntityMapper<DiscountProductDTO, D
         if (dto.getType() != null) {
             entity.setType(DiscountType.valueOf(dto.getType()));
         }
-        entity.setDiscountValue(dto.getDiscountValue());
-        entity.setPercentage(dto.isPercentage());
         return entity;
     }
+
 }

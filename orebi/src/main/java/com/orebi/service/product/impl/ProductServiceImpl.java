@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import com.orebi.dto.ProductDTO;
 import com.orebi.entity.Category;
 import com.orebi.entity.Product;
-import com.orebi.entity.ProductDetail;
 import com.orebi.entity.SubCategory;
 import com.orebi.exception.ResourceNotFoundException;
 import com.orebi.mapper.ProductMapper;
@@ -104,14 +103,6 @@ public class ProductServiceImpl implements ProductService {
                 SubCategory subCategory = subCategoryRepository.findById(productDTO.getSubCategoryId())
                         .orElseThrow(() -> new ResourceNotFoundException("SubCategory not found"));
                 product.setSubCategory(subCategory);
-            }
-
-            if (productDTO.getProductDetailId() != null) {
-                ProductDetail detail = productDetailRepository.findById(productDTO.getProductDetailId())
-                        .orElseThrow(() -> new ResourceNotFoundException("ProductDetail not found"));
-
-                detail.setProduct(product);
-                product.setProductDetail(detail);
             }
 
             Product updatedProduct = productRepository.save(product);

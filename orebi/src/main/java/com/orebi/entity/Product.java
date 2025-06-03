@@ -1,8 +1,13 @@
 package com.orebi.entity;
 
-import java.util.List;
-
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "product")
@@ -17,24 +22,17 @@ public class Product {
     private String unit;
     private String description;
 
-    @OneToOne
-    @JoinColumn(name = "product_detail_id")
-    private ProductDetail productDetail;
-
     @ManyToOne
-    @JoinColumn(name = "category_id",nullable = true)
+    @JoinColumn(name = "category_id", nullable = true)
     private Category category;
 
     @ManyToOne
     @JoinColumn(name = "sub_category_id", nullable = true)
     private SubCategory subCategory;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    private List<DiscountProduct> discountProducts;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "applied_discount_code_id")
-    private DiscountCode appliedDiscountCode;
+    @OneToOne
+    @JoinColumn(name = "discount", nullable = true)
+    private Discount discount;
 
     public Long getProductId() {
         return productId;
@@ -65,18 +63,6 @@ public class Product {
         return this.discountedPrice;
     }
 
-    private void updateDiscountedPrice() {
-        if (appliedDiscountCode != null) {
-            if (appliedDiscountCode.isPercentage()) {
-                this.discountedPrice = originalPrice * (1 - appliedDiscountCode.getDiscountValue() / 100.0);
-            } else {
-                this.discountedPrice = Math.max(0, originalPrice - appliedDiscountCode.getDiscountValue());
-            }
-        } else {
-            this.discountedPrice = originalPrice;
-        }
-    }
-
     public String getUnit() {
         return this.unit;
     }
@@ -91,14 +77,6 @@ public class Product {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public ProductDetail getProductDetail() {
-        return this.productDetail;
-    }
-
-    public void setProductDetail(ProductDetail productDetail) {
-        this.productDetail = productDetail;
     }
 
     public Category getCategory() {
@@ -117,20 +95,25 @@ public class Product {
         this.subCategory = subCategory;
     }
 
-    public List<DiscountProduct> getDiscountProducts() {
-        return discountProducts;
+    public Discount getDiscount() {
+        return discount;
     }
 
-    public void setDiscountProducts(List<DiscountProduct> discountProducts) {
-        this.discountProducts = discountProducts;
-    }
-
-    public DiscountCode getAppliedDiscountCode() {
-        return appliedDiscountCode;
-    }
-
-    public void setAppliedDiscountCode(DiscountCode appliedDiscountCode) {
-        this.appliedDiscountCode = appliedDiscountCode;
+    public void setDiscount(Discount discount) {
+        this.discount = discount;
         updateDiscountedPrice();
+    }
+
+    // helper
+    private void updateDiscountedPrice() {
+        if (discount != null && discount.isActive() && discount.getType() == DiscountType.SYSTEM_DISCOUNT) {
+            if (discount.isPercentage()) {
+                this.discountedPrice = originalPrice * (1 - discount.getDiscountValue() / 100.0);
+            } else {
+                this.discountedPrice = Math.max(0, originalPrice - discount.getDiscountValue());
+            }
+        } else {
+            this.discountedPrice = originalPrice;
+        }
     }
 }

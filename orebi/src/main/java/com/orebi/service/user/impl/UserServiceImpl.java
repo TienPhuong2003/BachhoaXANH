@@ -3,6 +3,8 @@ package com.orebi.service.user.impl;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,6 +56,21 @@ public class UserServiceImpl implements UserService {
             User updatedUser = userRepository.save(existingUser);
             return userMapper.toDTO(updatedUser);
         });
+    }
+
+    @Override
+    public Optional<UserDTO> getCurrentUser() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            String username = ((UserDetails) principal).getUsername();
+            return userRepository.findByEmail(username).map(user -> {
+                UserDTO userDTO = userMapper.toDTO(user);
+                userDTO.setRole(user.getRole().getRoleName());
+
+                return userDTO;
+            });
+        }
+        return Optional.empty();
     }
 
     @Override

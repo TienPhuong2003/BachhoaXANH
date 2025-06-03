@@ -1,8 +1,9 @@
 package com.orebi.mapper;
 
+import org.springframework.stereotype.Component;
+
 import com.orebi.dto.LineItemDTO;
 import com.orebi.entity.LineItem;
-import org.springframework.stereotype.Component;
 
 @Component
 public class LineItemMapper implements EntityMapper<LineItemDTO, LineItem> {
@@ -20,10 +21,9 @@ public class LineItemMapper implements EntityMapper<LineItemDTO, LineItem> {
         }
         return new LineItemDTO(
                 entity.getLineItemId(),
-                productMapper.toDTO(entity.getProduct()),  
+                productMapper.toDTO(entity.getProduct()),
                 entity.getQuantity(),
-                entity.getTotalPrice()
-        );
+                entity.getTotalPrice());
     }
 
     @Override

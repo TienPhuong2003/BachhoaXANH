@@ -1,16 +1,17 @@
 package com.orebi.controller;
 
-import com.orebi.dto.ImageDTO;
-import com.orebi.service.image.ImageService;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.orebi.dto.ImageDTO;
+import com.orebi.service.image.ImageService;
 
 @RestController
 @RequestMapping("/api/images")
@@ -22,7 +23,7 @@ public class ImageController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<?> uploadImage(@RequestParam String targetId,
+    public ResponseEntity<ImageDTO> uploadImage(@RequestParam String targetId,
             @RequestParam String targetType,
             @RequestParam("file") MultipartFile imageFile) {
 
@@ -30,10 +31,9 @@ public class ImageController {
         return ResponseEntity.ok(uploadImage);
     }
 
-    
     @GetMapping("/getImage")
-    public ResponseEntity<String> getImage(@RequestParam String targetId, @RequestParam String targetType) {
-        String imageUrl = imageService.getImage(targetId, targetType);
+    public ResponseEntity<List<String>> getImage(@RequestParam String targetId, @RequestParam String targetType) {
+        List<String> imageUrl = imageService.getImage(targetId, targetType);
         return ResponseEntity.ok(imageUrl);
     }
 }

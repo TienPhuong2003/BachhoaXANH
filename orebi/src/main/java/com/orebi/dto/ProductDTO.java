@@ -8,8 +8,7 @@ public class ProductDTO {
     private String description;
     private Long categoryId;
     private Long subCategoryId;
-    private Long productDetailId;
-    private Long appliedDiscountCodeId;
+    private Long discountId;
 
     private double discountedPrice;
 
@@ -71,12 +70,12 @@ public class ProductDTO {
         this.subCategoryId = subCategoryId;
     }
 
-    public Long getAppliedDiscountCodeId() {
-        return appliedDiscountCodeId;
+    public Long getDiscountId() {
+        return discountId;
     }
 
-    public void setAppliedDiscountCodeId(Long appliedDiscountCodeId) {
-        this.appliedDiscountCodeId = appliedDiscountCodeId;
+    public void setDiscountId(Long discountId) {
+        this.discountId = discountId;
     }
 
     public double getDiscountedPrice() {
@@ -85,14 +84,6 @@ public class ProductDTO {
 
     public void setDiscountedPrice(double discountedPrice) {
         this.discountedPrice = discountedPrice;
-    }
-
-    public Long getProductDetailId() {
-        return productDetailId;
-    }
-
-    public void setProductDetailId(Long productDetailId) {
-        this.productDetailId = productDetailId;
     }
 
 }

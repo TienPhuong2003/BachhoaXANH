@@ -1,17 +1,17 @@
 package com.orebi.service.category.impl;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.orebi.dto.CategoryDTO;
 import com.orebi.entity.Category;
 import com.orebi.exception.ResourceNotFoundException;
 import com.orebi.mapper.CategoryMapper;
 import com.orebi.mapper.SubCategoryMapper;
 import com.orebi.repository.CategoryRepository;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import com.orebi.service.category.CategoryService;
-
-import java.util.List;
-
 
 @Service
 @Transactional
@@ -34,7 +34,7 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryMapper.toDTOList(categories);
     }
 
-     @Override
+    @Override
     public CategoryDTO getCategoryById(Long id) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Category with ID " + id + " not found"));
