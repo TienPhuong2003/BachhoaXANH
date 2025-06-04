@@ -64,11 +64,6 @@ public class LineItemServiceImpl implements LineItemService {
     }
 
     @Override
-    public void deleteLineItem(Long lineItemId) {
-        lineItemRepository.deleteById(lineItemId);
-    }
-
-    @Override
     public LineItemDTO getLineItemById(Long lineItemId) {
         return lineItemRepository.findById(lineItemId)
                 .map(lineItemMapper::toDTO)

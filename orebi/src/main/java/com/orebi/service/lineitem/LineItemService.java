@@ -9,9 +9,8 @@ public interface LineItemService {
 
     LineItemDTO UpdateLineItem(Long cartId, Long productId, int quantity);
 
-    void deleteLineItem(Long lineItemId);
+    void deleteLineItems(List<Long> lineItemIds);
 
     LineItemDTO getLineItemById(Long lineItemId);
 
-    void deleteLineItems(List<Long> lineItemIds);
 }
