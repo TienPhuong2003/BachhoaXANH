@@ -2,15 +2,16 @@ package com.orebi.dto;
 
 public class LineItemDTO {
     private Long lineItemId;
-    private ProductDTO product;
+    private Long productId;
     private int quantity;
     private double totalPrice;
 
-    public LineItemDTO() {}
+    public LineItemDTO() {
+    }
 
-    public LineItemDTO(Long lineItemId, ProductDTO product, int quantity,double totalPrice) {
+    public LineItemDTO(Long lineItemId, Long productId, int quantity, double totalPrice) {
         this.lineItemId = lineItemId;
-        this.product = product;
+        this.productId = productId;
         this.quantity = quantity;
         this.totalPrice = totalPrice;
     }
@@ -23,12 +24,12 @@ public class LineItemDTO {
         this.lineItemId = lineItemId;
     }
 
-    public ProductDTO getProduct() {
-        return product;
+    public Long getProductId() {
+        return productId;
     }
 
-    public void setProduct(ProductDTO product) {
-        this.product = product;
+    public void setProductId(Long productId) {
+        this.productId = productId;
     }
 
     public int getQuantity() {
@@ -47,5 +48,4 @@ public class LineItemDTO {
         this.totalPrice = totalPrice;
     }
 
-    
 }

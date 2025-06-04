@@ -50,8 +50,9 @@ public class DataInitializer {
             assignDefaultPermissionsToRoles(roleRepository, permissionRepository, rolePermissionRepository);
 
             // Tạo user mặc định
-            createDefaultUser(userRepository, passwordEncoder, "admin@example.com", "admin123", "Admin", adminRole);
-            createDefaultUser(userRepository, passwordEncoder, "user@example.com", "user123", "User", userRole);
+            createDefaultUser(userRepository, passwordEncoder, "admin@example.com", "admin123", "Admin", adminRole,
+                    true);
+            createDefaultUser(userRepository, passwordEncoder, "user@example.com", "user123", "User", userRole, true);
         };
     }
 
@@ -67,7 +68,7 @@ public class DataInitializer {
     }
 
     private void createDefaultUser(UserRepository userRepository, PasswordEncoder passwordEncoder,
-            String email, String password, String name, Role role) {
+            String email, String password, String name, Role role, boolean isActive) {
         Optional<User> existingUser = userRepository.findByEmail(email);
         if (existingUser.isEmpty()) {
             User user = new User();
@@ -76,7 +77,7 @@ public class DataInitializer {
             user.setName(name);
             user.setRole(role);
             user.setOtpVerified(true);
-            user.setActive(true);
+            user.setActive(isActive);
             userRepository.save(user);
         }
     }

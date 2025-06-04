@@ -75,6 +75,10 @@ public class ImageServiceImpl implements ImageService {
                 }
             }
         }
+        if (newImageFiles == null || newImageFiles.isEmpty()) {
+            List<Image> remainingImages = imageRepository.findByTargetIdAndTargetType(targetId, targetType);
+            return remainingImages.stream().map(imageMapper::toDTO).collect(Collectors.toList());
+        }
         return uploadImage(targetId, targetType, newImageFiles);
     }
 }

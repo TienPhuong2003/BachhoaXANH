@@ -13,6 +13,8 @@ import com.orebi.entity.Product;
 @Repository
 public interface LineItemRepository extends JpaRepository<LineItem, Long> {
     Optional<LineItem> findByCartAndProduct(Cart cart, Product product);
-    List<LineItem> findByCart(Cart cart);
+
     void deleteByCart(Cart cart);
+
+    List<LineItem> findByCart_CartId(Long cartId);
 }

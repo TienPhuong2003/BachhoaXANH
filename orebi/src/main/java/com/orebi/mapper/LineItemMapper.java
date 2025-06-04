@@ -4,15 +4,10 @@ import org.springframework.stereotype.Component;
 
 import com.orebi.dto.LineItemDTO;
 import com.orebi.entity.LineItem;
+import com.orebi.entity.Product;
 
 @Component
 public class LineItemMapper implements EntityMapper<LineItemDTO, LineItem> {
-
-    private final ProductMapper productMapper;
-
-    public LineItemMapper(ProductMapper productMapper) {
-        this.productMapper = productMapper;
-    }
 
     @Override
     public LineItemDTO toDTO(LineItem entity) {
@@ -21,7 +16,7 @@ public class LineItemMapper implements EntityMapper<LineItemDTO, LineItem> {
         }
         return new LineItemDTO(
                 entity.getLineItemId(),
-                productMapper.toDTO(entity.getProduct()),
+                entity.getProduct() != null ? entity.getProduct().getProductId() : null,
                 entity.getQuantity(),
                 entity.getTotalPrice());
     }
@@ -34,8 +29,12 @@ public class LineItemMapper implements EntityMapper<LineItemDTO, LineItem> {
         LineItem lineItem = new LineItem();
         lineItem.setLineItemId(dto.getLineItemId());
         lineItem.setQuantity(dto.getQuantity());
-        lineItem.setProduct(productMapper.toEntity(dto.getProduct()));
         lineItem.setTotalPrice(dto.getTotalPrice());
+        if (dto.getProductId() != null) {
+            Product product = new Product();
+            product.setProductId(dto.getProductId());
+            lineItem.setProduct(product);
+        }
         return lineItem;
     }
 }

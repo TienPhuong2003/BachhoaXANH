@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.orebi.dto.CartDTO;
+import com.orebi.dto.LineItemDTO;
 import com.orebi.dto.request.CheckoutRequest;
-import com.orebi.dto.request.UpdateCartRequest;
 import com.orebi.entity.Cart;
 import com.orebi.entity.LineItem;
 import com.orebi.entity.Order;
@@ -21,43 +21,32 @@ import com.orebi.entity.Product;
 import com.orebi.entity.User;
 import com.orebi.exception.ResourceNotFoundException;
 import com.orebi.mapper.CartMapper;
-import com.orebi.mapper.LineItemMapper;
-import com.orebi.mapper.OrderMapper;
 import com.orebi.repository.CartRepository;
 import com.orebi.repository.LineItemRepository;
 import com.orebi.repository.OrderRepository;
-import com.orebi.repository.ProductRepository;
 import com.orebi.repository.UserRepository;
 import com.orebi.security.CustomUserDetails;
 import com.orebi.service.cart.CartService;
+import com.orebi.service.lineitem.LineItemService;
 
 @Service
 public class CartServiceImpl implements CartService {
 
     private final CartRepository cartRepository;
     private final LineItemRepository lineItemRepository;
-    private final ProductRepository productRepository;
     private final UserRepository userRepository;
     private final CartMapper cartMapper;
-    private final LineItemMapper lineItemMapper;
-    private final OrderMapper orderMapper;
     private final OrderRepository orderRepository;
+    private final LineItemService lineItemService;
 
-    public CartServiceImpl(CartRepository cartRepository,
-            LineItemRepository lineItemRepository,
-            ProductRepository productRepository,
-            UserRepository userRepository,
-            CartMapper cartMapper,
-            LineItemMapper lineItemMapper,
-            OrderMapper orderMapper,
-            OrderRepository orderRepository) {
+    public CartServiceImpl(CartRepository cartRepository, LineItemRepository lineItemRepository,
+            UserRepository userRepository, CartMapper cartMapper, OrderRepository orderRepository,
+            LineItemService lineItemService) {
+        this.lineItemService = lineItemService;
         this.cartRepository = cartRepository;
         this.lineItemRepository = lineItemRepository;
-        this.productRepository = productRepository;
         this.userRepository = userRepository;
         this.cartMapper = cartMapper;
-        this.lineItemMapper = lineItemMapper;
-        this.orderMapper = orderMapper;
         this.orderRepository = orderRepository;
     }
 
@@ -85,45 +74,9 @@ public class CartServiceImpl implements CartService {
         Long userId = getCurrentUserId();
         Cart cart = getOrCreateCartEntity(userId);
         CartDTO cartDTO = cartMapper.toDTO(cart);
-        cartDTO.setLineItems(lineItemMapper.toDTOList(cart.getLineItems()));
+        List<LineItemDTO> lineItems = lineItemService.getLineItemsByCartId(cart.getCartId());
+        cartDTO.setLineItems(lineItems);
         return Optional.of(cartDTO);
-    }
-
-    @Override
-    @Transactional
-    public CartDTO updateCartItems(List<UpdateCartRequest.CartItemUpdate> items) {
-        Long userId = getCurrentUserId();
-        Cart cart = getOrCreateCartEntity(userId);
-
-        for (UpdateCartRequest.CartItemUpdate item : items) {
-            Product product = productRepository.findById(item.getProductId())
-                    .orElseThrow(
-                            () -> new ResourceNotFoundException("Không tìm thấy sản phẩm ID: " + item.getProductId()));
-
-            Optional<LineItem> existingLineItemOpt = lineItemRepository.findByCartAndProduct(cart, product);
-
-            if (item.getQuantity() <= 0) {
-                existingLineItemOpt.ifPresent(lineItem -> {
-                    lineItemRepository.delete(lineItem);
-                    cart.getLineItems().remove(lineItem);
-                });
-            } else {
-                LineItem lineItem = existingLineItemOpt.orElseGet(() -> {
-                    LineItem newItem = new LineItem();
-                    newItem.setCart(cart);
-                    newItem.setProduct(product);
-                    return newItem;
-                });
-
-                lineItem.setQuantity(item.getQuantity());
-                calculateTotalPrice(lineItem);
-                lineItemRepository.save(lineItem);
-            }
-        }
-
-        CartDTO cartDTO = cartMapper.toDTO(cart);
-        cartDTO.setLineItems(lineItemMapper.toDTOList(cart.getLineItems()));
-        return cartDTO;
     }
 
     @Override
