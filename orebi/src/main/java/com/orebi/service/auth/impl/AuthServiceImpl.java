@@ -70,7 +70,10 @@ public class AuthServiceImpl implements AuthService {
                 User user = existingUser.get();
                 // Nếu tài khoản chưa xác thực OTP, xóa và đăng ký lại
                 if (!user.isOtpVerified()) {
-                    userRepository.delete(user);
+                    // Gửi lại OTP, không xóa user
+                    otpService.generateAndSendOtp(user.getEmail());
+                    return ResponseEntity.ok(new MessageResponse(
+                            "Email đã tồn tại nhưng chưa xác thực. Đã gửi lại mã OTP mới, vui lòng kiểm tra email để xác thực tài khoản"));
                 } else {
                     return ResponseEntity.badRequest()
                             .body(new MessageResponse("Email đã tồn tại và đã được xác thực"));
@@ -94,9 +97,7 @@ public class AuthServiceImpl implements AuthService {
             otpService.generateAndSendOtp(newUser.getEmail());
 
             return ResponseEntity.ok(new MessageResponse(
-                    existingUser.isPresent()
-                            ? "Email đã tồn tại nhưng chưa xác thực. Đã gửi lại mã OTP mới, vui lòng kiểm tra email để xác thực tài khoản"
-                            : "Đăng ký thành công. Vui lòng kiểm tra email để xác thực tài khoản"));
+                    "Đăng ký thành công. Vui lòng kiểm tra email để xác thực tài khoản"));
 
         } catch (Exception e) {
             return ResponseEntity.badRequest()

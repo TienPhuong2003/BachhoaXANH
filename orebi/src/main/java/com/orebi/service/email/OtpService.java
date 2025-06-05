@@ -4,8 +4,6 @@ import java.time.LocalDateTime;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import com.orebi.dto.UserDTO;
@@ -20,7 +18,7 @@ public class OtpService {
     private UserRepository userRepository;
 
     @Autowired
-    private JavaMailSender mailSender;
+    private EmailService emailService;
 
     public void generateAndSendOtp(String email) {
         User user = userRepository.findByEmail(email)
@@ -39,11 +37,7 @@ public class OtpService {
         userRepository.save(user);
 
         // Gửi OTP qua email
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(email);
-        message.setSubject("Mã OTP xác thực");
-        message.setText("Mã OTP của bạn là: " + otp + "\nMã có hiệu lực trong 5 phút.");
-        mailSender.send(message);
+        emailService.sendVerificationEmail(email, otp);
     }
 
     public UserDTO verifyOtp(String email, String otp) {
@@ -53,14 +47,14 @@ public class OtpService {
         if (user.getOtp() == null || user.getOtpExpiredAt() == null) {
             throw new InvalidOtpException("OTP không tồn tại hoặc đã được sử dụng");
         }
- 
+
         if (user.getOtp().equals(otp)) {
             if (LocalDateTime.now().isBefore(user.getOtpExpiredAt())) {
                 user.setOtpVerified(true);
                 user.setOtp(null);
                 user.setOtpExpiredAt(null);
                 userRepository.save(user);
-                return new UserDTO(user); 
+                return new UserDTO(user);
             } else {
                 clearExpiredOtp(email);
                 throw new InvalidOtpException("OTP đã hết hạn");
