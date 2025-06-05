@@ -7,4 +7,5 @@ import com.orebi.entity.OrderDetail;
 
 @Repository
 public interface OrderDetailRepository extends JpaRepository<OrderDetail, Long> {
+
 }

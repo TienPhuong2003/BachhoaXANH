@@ -1,4 +1,4 @@
-package com.orebi.Cloudinary;
+package com.orebi.thirdparty.Cloudinary;
 
 import java.io.IOException;
 import java.util.Map;
@@ -18,15 +18,13 @@ public class CloudinaryService {
     public CloudinaryUploadResponse uploadFile(MultipartFile file, String folderName) {
         try {
             Map<?, ?> result = cloudinary.uploader().upload(
-                file.getBytes(),
-                ObjectUtils.asMap(
-                    "resource_type", "auto",
-                    "folder", folderName
-                )
-            );
+                    file.getBytes(),
+                    ObjectUtils.asMap(
+                            "resource_type", "auto",
+                            "folder", folderName));
             String url = result.get("secure_url").toString();
             String publicId = result.get("public_id").toString();
-            
+
             return new CloudinaryUploadResponse(url, publicId);
         } catch (IOException e) {
             throw new RuntimeException("Upload failed: " + e.getMessage());

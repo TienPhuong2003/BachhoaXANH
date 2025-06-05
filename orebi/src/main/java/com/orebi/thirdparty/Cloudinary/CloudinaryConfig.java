@@ -1,4 +1,4 @@
-package com.orebi.Cloudinary;
+package com.orebi.thirdparty.Cloudinary;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -21,9 +21,8 @@ public class CloudinaryConfig {
     @Bean
     public Cloudinary cloudinary() {
         return new Cloudinary(ObjectUtils.asMap(
-            "cloud_name", cloudName,
-            "api_key", apiKey,
-            "api_secret", apiSecret
-        ));
+                "cloud_name", cloudName,
+                "api_key", apiKey,
+                "api_secret", apiSecret));
     }
 }

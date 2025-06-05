@@ -23,6 +23,7 @@ import com.orebi.repository.RoleRepository;
 import com.orebi.repository.UserRepository;
 import com.orebi.security.JwtTokenUtil;
 import com.orebi.service.auth.AuthService;
+import com.orebi.service.cart.CartService;
 import com.orebi.service.email.EmailService;
 import com.orebi.service.email.OtpService;
 
@@ -38,6 +39,7 @@ public class AuthServiceImpl implements AuthService {
     private final JwtTokenUtil jwtTokenUtil;
     private final AuthenticationManager authenticationManager;
     private final EmailService emailService;
+    private final CartService cartService;
 
     @Value("${reset.password.url}")
     private String resetPasswordUrl;
@@ -47,6 +49,7 @@ public class AuthServiceImpl implements AuthService {
             RoleRepository roleRepository,
             PasswordEncoder passwordEncoder,
             OtpService otpService,
+            CartService cartService,
             JwtTokenUtil jwtTokenUtil,
             AuthenticationManager authenticationManager,
             EmailService emailService) {
@@ -57,6 +60,7 @@ public class AuthServiceImpl implements AuthService {
         this.jwtTokenUtil = jwtTokenUtil;
         this.authenticationManager = authenticationManager;
         this.emailService = emailService;
+        this.cartService = cartService;
     }
 
     // đăng ký
@@ -156,6 +160,9 @@ public class AuthServiceImpl implements AuthService {
         user.setOtpExpiredAt(null);
         user.setActive(true);
         userRepository.save(user);
+
+        // Tạo giỏ hàng cho người dùng mới
+        cartService.getOrCreateCartEntity(user.getUserId());
 
         return ResponseEntity.ok(new MessageResponse("Xác thực tài khoàn thành công"));
     }

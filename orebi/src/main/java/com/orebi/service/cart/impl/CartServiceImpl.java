@@ -56,7 +56,8 @@ public class CartServiceImpl implements CartService {
         return userDetails.getUserId();
     }
 
-    private Cart getOrCreateCartEntity(Long userId) {
+    @Override
+    public Cart getOrCreateCartEntity(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User không tồn tại"));
 

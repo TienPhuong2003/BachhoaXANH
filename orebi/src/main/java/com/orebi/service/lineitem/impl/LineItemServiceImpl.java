@@ -46,6 +46,12 @@ public class LineItemServiceImpl implements LineItemService {
                 .orElseThrow(() -> new IllegalArgumentException("Product not found"));
 
         Optional<LineItem> existing = lineItemRepository.findByCartAndProduct(cart, product);
+
+        if (quantity == 0) {
+            existing.ifPresent(lineItemRepository::delete);
+            return null;
+        }
+
         LineItem lineItem;
         if (existing.isPresent()) {
             lineItem = existing.get();

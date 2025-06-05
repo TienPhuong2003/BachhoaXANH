@@ -1,5 +1,4 @@
-package com.orebi.Cloudinary;
-
+package com.orebi.thirdparty.Cloudinary;
 
 public class CloudinaryUploadResponse {
     private String url;

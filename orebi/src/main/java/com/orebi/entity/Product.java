@@ -56,6 +56,10 @@ public class Product {
 
     public void setOriginalPrice(double originalPrice) {
         this.originalPrice = originalPrice;
+    }
+
+    public void setDiscountedPrice(double discountedPrice) {
+        this.discountedPrice = discountedPrice;
         updateDiscountedPrice();
     }
 
