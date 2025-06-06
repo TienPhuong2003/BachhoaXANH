@@ -1,9 +1,10 @@
 package com.orebi.service.cart;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.orebi.dto.CartDTO;
-import com.orebi.dto.request.CheckoutRequest;
+import com.orebi.dto.OrderDTO;
 import com.orebi.entity.Cart;
 
 public interface CartService {
@@ -11,5 +12,6 @@ public interface CartService {
 
     Optional<CartDTO> getCartByUserId();
 
-    void checkout(CheckoutRequest checkoutRequest);
+    void checkout(List<Long> selectedLineItemIds, OrderDTO orderDTO);
+
 }

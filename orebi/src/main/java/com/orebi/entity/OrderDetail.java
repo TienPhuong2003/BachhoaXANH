@@ -29,7 +29,6 @@ public class OrderDetail {
     private String snapshotProductImage;
     private double snapshotPrice;
 
-    // === Getter & Setter ===
 
     public Long getOrderDetailId() {
         return orderDetailId;

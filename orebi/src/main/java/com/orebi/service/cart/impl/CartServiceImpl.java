@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.orebi.dto.CartDTO;
 import com.orebi.dto.LineItemDTO;
-import com.orebi.dto.request.CheckoutRequest;
+import com.orebi.dto.OrderDTO;
 import com.orebi.entity.Cart;
 import com.orebi.entity.LineItem;
 import com.orebi.entity.Order;
@@ -28,26 +28,25 @@ import com.orebi.repository.UserRepository;
 import com.orebi.security.CustomUserDetails;
 import com.orebi.service.cart.CartService;
 import com.orebi.service.lineitem.LineItemService;
+import com.orebi.service.order.OrderService;
 
 @Service
 public class CartServiceImpl implements CartService {
 
     private final CartRepository cartRepository;
-    private final LineItemRepository lineItemRepository;
+    private final OrderService orderService;
     private final UserRepository userRepository;
     private final CartMapper cartMapper;
-    private final OrderRepository orderRepository;
     private final LineItemService lineItemService;
 
-    public CartServiceImpl(CartRepository cartRepository, LineItemRepository lineItemRepository,
-            UserRepository userRepository, CartMapper cartMapper, OrderRepository orderRepository,
+    public CartServiceImpl(CartRepository cartRepository, OrderService orderService,
+            UserRepository userRepository, CartMapper cartMapper,
             LineItemService lineItemService) {
-        this.lineItemService = lineItemService;
         this.cartRepository = cartRepository;
-        this.lineItemRepository = lineItemRepository;
+        this.orderService = orderService;
         this.userRepository = userRepository;
         this.cartMapper = cartMapper;
-        this.orderRepository = orderRepository;
+        this.lineItemService = lineItemService;
     }
 
     private Long getCurrentUserId() {
@@ -82,71 +81,20 @@ public class CartServiceImpl implements CartService {
 
     @Override
     @Transactional
-    public void checkout(CheckoutRequest checkoutRequest) {
-        Long userId = getCurrentUserId();
-        Cart cart = getOrCreateCartEntity(userId);
-        User user = cart.getUser();
+    public void checkout(List<Long> selectedLineItemIds, OrderDTO orderDTO) {
+        Cart cart = getOrCreateCartEntity(getCurrentUserId());
 
         List<LineItem> selectedItems = cart.getLineItems().stream()
-                .filter(item -> checkoutRequest.getLineItemIds().contains(item.getLineItemId()))
+                .filter(item -> selectedLineItemIds.contains(item.getLineItemId()))
                 .toList();
 
         if (selectedItems.isEmpty()) {
             throw new IllegalStateException("Không có sản phẩm nào được chọn để đặt hàng.");
         }
 
-        Order order = new Order();
-        order.setUser(user);
-        order.setOrderDate(LocalDateTime.now());
-        order.setStatus(OrderStatus.PENDING);
-        order.setPaymentMethod(checkoutRequest.getPaymentMethod());
-        order.setShippingAddress(checkoutRequest.getShippingAddress());
-        order.setPhone(checkoutRequest.getPhone());
-        order.setShippingFee(checkoutRequest.getShippingFee());
-        order.setRecipientName(checkoutRequest.getRecipientName());
-        order.setRecipientPhone(checkoutRequest.getRecipientPhone());
-        order.setNote(checkoutRequest.getNote());
-        order.setIsPaid(false);
-        order.setCreatedAt(LocalDateTime.now());
-        order.setUpdatedAt(LocalDateTime.now());
+        
 
-        double totalOrderPrice = 0;
-        List<OrderDetail> orderDetails = new ArrayList<>();
-
-        for (LineItem item : selectedItems) {
-            Product product = item.getProduct();
-            double unitPrice = product.getDiscountedPrice() > 0 ? product.getDiscountedPrice()
-                    : product.getOriginalPrice();
-            int quantity = item.getQuantity();
-            double totalPrice = unitPrice * quantity;
-
-            OrderDetail detail = new OrderDetail();
-            detail.setOrder(order);
-            detail.setQuantity(quantity);
-            detail.setUnitPrice(unitPrice);
-            detail.setTotalPrice(totalPrice);
-            detail.setSnapshotProductId(product.getProductId());
-            detail.setSnapshotProductName(product.getName());
-            detail.setSnapshotPrice(unitPrice);
-
-            orderDetails.add(detail);
-            totalOrderPrice += totalPrice;
-        }
-
-        order.setTotalPrice(totalOrderPrice);
-        order.setOrderDetails(orderDetails);
-
-        orderRepository.save(order);
-
-        lineItemRepository.deleteAll(selectedItems);
-        cart.getLineItems().removeAll(selectedItems);
     }
 
-    // helper method
-    private void calculateTotalPrice(LineItem lineItem) {
-        Product product = lineItem.getProduct();
-        double price = product.getDiscountedPrice() != 0 ? product.getDiscountedPrice()
-                : product.getOriginalPrice();
-        lineItem.setTotalPrice(price * lineItem.getQuantity());
-    }
+    
 }

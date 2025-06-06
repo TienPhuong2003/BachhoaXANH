@@ -62,8 +62,7 @@ public class LineItemServiceImpl implements LineItemService {
             lineItem.setProduct(product);
             lineItem.setQuantity(quantity);
         }
-        double price = product.getDiscountedPrice() > 0 ? product.getDiscountedPrice() : product.getOriginalPrice();
-        lineItem.setTotalPrice(price * lineItem.getQuantity());
+        calculateTotalPrice(lineItem);
 
         LineItem saved = lineItemRepository.save(lineItem);
         return lineItemMapper.toDTO(saved);
@@ -80,6 +79,14 @@ public class LineItemServiceImpl implements LineItemService {
     public void deleteLineItems(List<Long> lineItemIds) {
         List<LineItem> items = lineItemRepository.findAllById(lineItemIds);
         lineItemRepository.deleteAll(items);
+    }
+
+    // helper method
+    private void calculateTotalPrice(LineItem lineItem) {
+        Product product = lineItem.getProduct();
+        double price = product.getDiscountedPrice() != 0 ? product.getDiscountedPrice()
+                : product.getOriginalPrice();
+        lineItem.setTotalPrice(price * lineItem.getQuantity());
     }
 
 }
