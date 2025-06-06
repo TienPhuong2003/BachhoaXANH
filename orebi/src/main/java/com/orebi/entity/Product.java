@@ -21,6 +21,8 @@ public class Product {
     private double discountedPrice;
     private String unit;
     private String description;
+    private int quantity_limit;
+    private boolean isActive;
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = true)
@@ -60,7 +62,6 @@ public class Product {
 
     public void setDiscountedPrice(double discountedPrice) {
         this.discountedPrice = discountedPrice;
-        updateDiscountedPrice();
     }
 
     public double getDiscountedPrice() {
@@ -108,14 +109,26 @@ public class Product {
         updateDiscountedPrice();
     }
 
+    public int getQuantityLimit() {
+        return quantity_limit;
+    }
+
+    public void setQuantityLimit(int quantity_limit) {
+        this.quantity_limit = quantity_limit;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
     // helper
     private void updateDiscountedPrice() {
         if (discount != null && discount.isActive() && discount.getType() == DiscountType.SYSTEM_DISCOUNT) {
-            if (discount.isPercentage()) {
-                this.discountedPrice = originalPrice * (1 - discount.getDiscountValue() / 100.0);
-            } else {
-                this.discountedPrice = Math.max(0, originalPrice - discount.getDiscountValue());
-            }
+            this.discountedPrice = discount.getPrice();
         } else {
             this.discountedPrice = originalPrice;
         }

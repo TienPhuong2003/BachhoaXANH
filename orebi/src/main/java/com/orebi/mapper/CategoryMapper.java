@@ -1,8 +1,9 @@
 package com.orebi.mapper;
 
+import org.springframework.stereotype.Component;
+
 import com.orebi.dto.CategoryDTO;
 import com.orebi.entity.Category;
-import org.springframework.stereotype.Component;
 
 @Component
 public class CategoryMapper implements EntityMapper<CategoryDTO, Category> {
@@ -29,8 +30,12 @@ public class CategoryMapper implements EntityMapper<CategoryDTO, Category> {
         Category entity = new Category();
         entity.setCategoryId(dto.getCategoryId());
         entity.setName(dto.getName());
-        entity.setSubCategories(subCategoryMapper.toEntityList(dto.getSubCategories()));
-        entity.getSubCategories().forEach(subCategory -> subCategory.setCategory(entity));
+        if (dto.getSubCategories() != null) {
+            entity.setSubCategories(subCategoryMapper.toEntityList(dto.getSubCategories()));
+            entity.getSubCategories().forEach(subCategory -> subCategory.setCategory(entity));
+        } else {
+            entity.setSubCategories(java.util.Collections.emptyList());
+        }
         return entity;
     }
 }

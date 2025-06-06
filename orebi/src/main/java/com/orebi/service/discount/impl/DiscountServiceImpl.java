@@ -11,6 +11,7 @@ import com.orebi.dto.DiscountDTO.DiscountProductDTO;
 import com.orebi.dto.DiscountDTO.DiscountShipDTO;
 import com.orebi.entity.Discount;
 import com.orebi.entity.DiscountType;
+import com.orebi.entity.Product;
 import com.orebi.mapper.DiscountMapper;
 import com.orebi.mapper.DiscountOrderMapper;
 import com.orebi.mapper.DiscountProductMapper;
@@ -18,6 +19,7 @@ import com.orebi.mapper.DiscountShipMapper;
 import com.orebi.mapper.EntityMapper;
 import com.orebi.repository.DiscountRepository;
 import com.orebi.service.discount.DiscountService;
+import com.orebi.repository.ProductRepository;
 
 @Service
 public class DiscountServiceImpl implements DiscountService {
@@ -26,12 +28,15 @@ public class DiscountServiceImpl implements DiscountService {
     private final DiscountOrderMapper discountOrderMapper;
     private final DiscountShipMapper discountShipMapper;
     private final DiscountRepository discountRepository;
+    private final ProductRepository productRepository;
 
     public DiscountServiceImpl(DiscountMapper discountMapper,
             DiscountProductMapper discountProductMapper,
             DiscountOrderMapper discountOrderMapper,
             DiscountShipMapper discountShipMapper,
-            DiscountRepository discountRepository) {
+            DiscountRepository discountRepository,
+            ProductRepository productRepository) {
+        this.productRepository = productRepository;
         this.discountMapper = discountMapper;
         this.discountProductMapper = discountProductMapper;
         this.discountOrderMapper = discountOrderMapper;
@@ -63,6 +68,22 @@ public class DiscountServiceImpl implements DiscountService {
     @Override
     public DiscountBaseDTO updateSystemDiscount(Long id, DiscountBaseDTO dto) {
         return saveDiscount(dto, DiscountType.SYSTEM_DISCOUNT, discountMapper, id);
+    }
+
+    @Override
+    public void applySystemDiscountToProducts(Long discountId, List<Long> productIds) {
+        Discount discount = discountRepository.findById(discountId)
+                .orElseThrow(() -> new RuntimeException("Discount not found"));
+
+        if (discount.getType() != DiscountType.SYSTEM_DISCOUNT) {
+            throw new IllegalArgumentException("Discount is not SYSTEM_DISCOUNT");
+        }
+
+        List<Product> products = productRepository.findAllById(productIds);
+        for (Product product : products) {
+            product.setDiscount(discount);
+        }
+        productRepository.saveAll(products);
     }
 
     @Override

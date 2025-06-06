@@ -9,6 +9,7 @@ public class DiscountBaseDTO {
     private String code;
     private String description;
     private boolean isActive;
+    private double price;
 
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate startDate;
@@ -71,6 +72,14 @@ public class DiscountBaseDTO {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 
 }

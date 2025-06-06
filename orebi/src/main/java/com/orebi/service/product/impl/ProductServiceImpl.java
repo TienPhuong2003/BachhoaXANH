@@ -13,7 +13,6 @@ import com.orebi.entity.SubCategory;
 import com.orebi.exception.ResourceNotFoundException;
 import com.orebi.mapper.ProductMapper;
 import com.orebi.repository.CategoryRepository;
-import com.orebi.repository.ProductDetailRepository;
 import com.orebi.repository.ProductRepository;
 import com.orebi.repository.SubCategoryRepository;
 import com.orebi.security.PermissionChecker;
@@ -29,20 +28,17 @@ public class ProductServiceImpl implements ProductService {
     private final CategoryRepository categoryRepository;
     private final SubCategoryRepository subCategoryRepository;
     private final ProductMapper productMapper;
-    private final ProductDetailRepository productDetailRepository;
     private final PermissionChecker permissionChecker;
 
     public ProductServiceImpl(
             ProductRepository productRepository,
             CategoryRepository categoryRepository,
             SubCategoryRepository subCategoryRepository,
-            ProductDetailRepository productDetailRepository,
             ProductMapper productMapper,
             PermissionChecker permissionChecker) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
         this.subCategoryRepository = subCategoryRepository;
-        this.productDetailRepository = productDetailRepository;
         this.productMapper = productMapper;
         this.permissionChecker = permissionChecker;
     }

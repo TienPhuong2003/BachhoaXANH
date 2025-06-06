@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.orebi.dto.CartDTO;
 import com.orebi.dto.OrderDTO;
-import com.orebi.entity.Order;
 import com.orebi.service.cart.CartService;
 
 @RestController
@@ -33,7 +32,7 @@ public class CartController {
 
     @PostMapping("/checkout")
     public ResponseEntity<?> checkout(@RequestBody List<Long> selectedLineItemIds, @RequestBody OrderDTO request) {
-        cartService.checkout(selectedLineItemIds,request);
+        cartService.checkout(selectedLineItemIds, request);
         return ResponseEntity.ok().build();
     }
 }

@@ -21,6 +21,7 @@ public class DiscountMapper implements EntityMapper<DiscountBaseDTO, Discount> {
         dto.setStartDate(entity.getStartDate() != null ? entity.getStartDate().toLocalDate() : null);
         dto.setEndDate(entity.getEndDate() != null ? entity.getEndDate().toLocalDate() : null);
         dto.setType(entity.getType() != null ? entity.getType().name() : null);
+        dto.setPrice(entity.getPrice());
         return dto;
     }
 
@@ -38,6 +39,7 @@ public class DiscountMapper implements EntityMapper<DiscountBaseDTO, Discount> {
         if (dto.getType() != null) {
             entity.setType(DiscountType.valueOf(dto.getType()));
         }
+        entity.setPrice(dto.getPrice());
         return entity;
     }
 

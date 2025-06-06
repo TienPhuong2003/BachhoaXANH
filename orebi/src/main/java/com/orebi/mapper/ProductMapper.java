@@ -24,6 +24,8 @@ public class ProductMapper implements EntityMapper<ProductDTO, Product> {
         dto.setUnit(product.getUnit());
         dto.setDescription(product.getDescription());
         dto.setDiscountedPrice(product.getDiscountedPrice());
+        dto.setQuantityLimit(product.getQuantityLimit());
+        dto.setActive(product.isActive());
 
         if (product.getCategory() != null) {
             dto.setCategoryId(product.getCategory().getCategoryId());
@@ -51,6 +53,8 @@ public class ProductMapper implements EntityMapper<ProductDTO, Product> {
         product.setOriginalPrice(dto.getOriginalPrice());
         product.setUnit(dto.getUnit());
         product.setDescription(dto.getDescription());
+        product.setQuantityLimit(dto.getQuantityLimit());
+        product.setActive(dto.isActive());
 
         if (dto.getCategoryId() != null) {
             Category category = new Category();

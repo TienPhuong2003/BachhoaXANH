@@ -44,6 +44,11 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDTO createCategory(CategoryDTO categoryDTO) {
         Category category = categoryMapper.toEntity(categoryDTO);
+        if (category.getSubCategories() == null) {
+            category.setSubCategories(List.of());
+        } else {
+            category.getSubCategories().forEach(subCategory -> subCategory.setCategory(category));
+        }
         Category savedCategory = categoryRepository.save(category);
         return categoryMapper.toDTO(savedCategory);
     }

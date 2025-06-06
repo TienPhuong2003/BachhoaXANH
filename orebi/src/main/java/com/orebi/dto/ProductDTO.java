@@ -9,6 +9,8 @@ public class ProductDTO {
     private Long categoryId;
     private Long subCategoryId;
     private Long discountId;
+    private int quantityLimit;
+    private boolean isActive;
 
     private double discountedPrice;
 
@@ -86,4 +88,19 @@ public class ProductDTO {
         this.discountedPrice = discountedPrice;
     }
 
+    public int getQuantityLimit() {
+        return quantityLimit;
+    }
+
+    public void setQuantityLimit(int quantityLimit) {
+        this.quantityLimit = quantityLimit;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
 }

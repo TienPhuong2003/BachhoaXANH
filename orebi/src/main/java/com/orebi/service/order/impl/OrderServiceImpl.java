@@ -62,12 +62,27 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
         // Cập nhật các trường cần thiết từ updatedOrderDTO
-        order.setShippingAddress(updatedOrderDTO.getShippingAddress());
-        order.setPhone(updatedOrderDTO.getPhone());
-        order.setRecipientName(updatedOrderDTO.getRecipientName());
-        order.setRecipientPhone(updatedOrderDTO.getRecipientPhone());
-        order.setNote(updatedOrderDTO.getNote());
-        order.setUpdatedAt(updatedOrderDTO.getUpdatedAt());
+        if (updatedOrderDTO.getShippingAddress() != null
+                && !updatedOrderDTO.getShippingAddress().equals(order.getShippingAddress())) {
+            order.setShippingAddress(updatedOrderDTO.getShippingAddress());
+        }
+        if (updatedOrderDTO.getPhone() != null
+                && !updatedOrderDTO.getPhone().equals(order.getPhone())) {
+            order.setPhone(updatedOrderDTO.getPhone());
+        }
+        if (updatedOrderDTO.getRecipientName() != null
+                && !updatedOrderDTO.getRecipientName().equals(order.getRecipientName())) {
+            order.setRecipientName(updatedOrderDTO.getRecipientName());
+        }
+        if (updatedOrderDTO.getRecipientPhone() != null
+                && !updatedOrderDTO.getRecipientPhone().equals(order.getRecipientPhone())) {
+            order.setRecipientPhone(updatedOrderDTO.getRecipientPhone());
+        }
+        if (updatedOrderDTO.getNote() != null
+                && !updatedOrderDTO.getNote().equals(order.getNote())) {
+            order.setNote(updatedOrderDTO.getNote());
+        }
+        order.setUpdatedAt(java.time.LocalDateTime.now());
         Order savedOrder = orderRepository.save(order);
         return orderMapper.toDTO(savedOrder);
     }

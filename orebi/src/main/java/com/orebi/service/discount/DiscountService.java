@@ -39,4 +39,6 @@ public interface DiscountService {
     DiscountShipDTO updateShippingDiscount(Long id, DiscountShipDTO dto);
 
     void deleteShippingDiscount(Long id);
+
+    void applySystemDiscountToProducts(Long discountId, List<Long> productIds);
 }
