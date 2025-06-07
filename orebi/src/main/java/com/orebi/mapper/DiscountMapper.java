@@ -18,10 +18,11 @@ public class DiscountMapper implements EntityMapper<DiscountBaseDTO, Discount> {
         dto.setCode(entity.getCode());
         dto.setDescription(entity.getDescription());
         dto.setActive(entity.isActive());
-        dto.setStartDate(entity.getStartDate() != null ? entity.getStartDate().toLocalDate() : null);
-        dto.setEndDate(entity.getEndDate() != null ? entity.getEndDate().toLocalDate() : null);
+        dto.setDiscountValue(entity.getDiscountValue());
+        dto.setPercentage(entity.isPercentage());
+        dto.setStartDate(entity.getStartDate());
+        dto.setEndDate(entity.getEndDate());
         dto.setType(entity.getType() != null ? entity.getType().name() : null);
-        dto.setPrice(entity.getPrice());
         return dto;
     }
 
@@ -34,12 +35,13 @@ public class DiscountMapper implements EntityMapper<DiscountBaseDTO, Discount> {
         entity.setCode(dto.getCode());
         entity.setDescription(dto.getDescription());
         entity.setActive(dto.isActive());
-        entity.setStartDate(dto.getStartDate() != null ? dto.getStartDate().atStartOfDay() : null);
-        entity.setEndDate(dto.getEndDate() != null ? dto.getEndDate().atStartOfDay() : null);
+        entity.setDiscountValue(dto.getDiscountValue());
+        entity.setPercentage(dto.isPercentage());
+        entity.setStartDate(dto.getStartDate());
+        entity.setEndDate(dto.getEndDate());
         if (dto.getType() != null) {
             entity.setType(DiscountType.valueOf(dto.getType()));
         }
-        entity.setPrice(dto.getPrice());
         return entity;
     }
 

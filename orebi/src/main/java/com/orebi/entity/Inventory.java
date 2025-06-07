@@ -2,9 +2,8 @@ package com.orebi.entity;
 
 public class Inventory {
     private Long inventoryId;
-    
-    private String location;
 
+    private String location;
 
     public Long getInventoryId() {
         return inventoryId;

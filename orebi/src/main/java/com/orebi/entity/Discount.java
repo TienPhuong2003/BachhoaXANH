@@ -27,7 +27,8 @@ public class Discount {
     private double minOrderValue;
     private double maxShipDiscount;
     private double minShipDiscount;
-    private double price;
+    private double minProductPrice;
+    private int quantity;
 
     public Long getId() {
         return id;
@@ -135,11 +136,19 @@ public class Discount {
         this.minShipDiscount = minShipDiscount;
     }
 
-    public double getPrice() {
-        return price;
+    public double getMinProductPrice() {
+        return minProductPrice;
     }
 
-    public void setPrice(double price) {
-        this.price = price;
+    public void setMinProductPrice(double minProductPrice) {
+        this.minProductPrice = minProductPrice;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 }

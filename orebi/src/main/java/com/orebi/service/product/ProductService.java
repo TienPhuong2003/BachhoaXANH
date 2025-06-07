@@ -1,7 +1,6 @@
 package com.orebi.service.product;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.orebi.dto.ProductDTO;
 
@@ -12,7 +11,7 @@ public interface ProductService {
 
     List<ProductDTO> getAllProducts();
 
-    Optional<ProductDTO> updateProduct(Long id, ProductDTO productDTO);
+    ProductDTO updateProduct(Long id, ProductDTO productDTO);
 
     void deleteProduct(Long id);
 

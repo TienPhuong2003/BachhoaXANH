@@ -18,8 +18,8 @@ import com.orebi.mapper.DiscountProductMapper;
 import com.orebi.mapper.DiscountShipMapper;
 import com.orebi.mapper.EntityMapper;
 import com.orebi.repository.DiscountRepository;
-import com.orebi.service.discount.DiscountService;
 import com.orebi.repository.ProductRepository;
+import com.orebi.service.discount.DiscountService;
 
 @Service
 public class DiscountServiceImpl implements DiscountService {
@@ -88,6 +88,11 @@ public class DiscountServiceImpl implements DiscountService {
 
     @Override
     public void deleteSystemDiscount(Long id) {
+        List<Product> products = productRepository.findByDiscount_Id(id);
+        for (Product product : products) {
+            product.setDiscount(null);
+        }
+        productRepository.saveAll(products);
         discountRepository.deleteById(id);
     }
 

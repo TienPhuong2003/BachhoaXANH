@@ -1,26 +1,9 @@
 package com.orebi.dto.DiscountDTO;
 
 public class DiscountOrderDTO extends DiscountBaseDTO {
-    private double discountValue;
-    private boolean isPercentage;
     private double minOrderValue;
     private double maxOrderValue;
-
-    public double getDiscountValue() {
-        return discountValue;
-    }
-
-    public void setDiscountValue(double discountValue) {
-        this.discountValue = discountValue;
-    }
-
-    public boolean isPercentage() {
-        return isPercentage;
-    }
-
-    public void setPercentage(boolean isPercentage) {
-        this.isPercentage = isPercentage;
-    }
+    private int quantity;
 
     public double getMinOrderValue() {
         return minOrderValue;
@@ -36,6 +19,14 @@ public class DiscountOrderDTO extends DiscountBaseDTO {
 
     public void setMaxOrderValue(double maxOrderValue) {
         this.maxOrderValue = maxOrderValue;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
 }

@@ -6,9 +6,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.orebi.dto.SubCategoryDTO;
+import com.orebi.entity.Product;
 import com.orebi.entity.SubCategory;
 import com.orebi.exception.ResourceNotFoundException;
 import com.orebi.mapper.SubCategoryMapper;
+import com.orebi.repository.ProductRepository;
 import com.orebi.repository.SubCategoryRepository;
 import com.orebi.service.subcategory.SubCategoryService;
 
@@ -17,8 +19,11 @@ import com.orebi.service.subcategory.SubCategoryService;
 public class SubCategoryServiceImpl implements SubCategoryService {
     private final SubCategoryRepository subCategoryRepository;
     private final SubCategoryMapper subCategoryMapper;
+    private final ProductRepository productRepository;
 
-    public SubCategoryServiceImpl(SubCategoryRepository subCategoryRepository, SubCategoryMapper subCategoryMapper) {
+    public SubCategoryServiceImpl(SubCategoryRepository subCategoryRepository, SubCategoryMapper subCategoryMapper,
+            ProductRepository productRepository) {
+        this.productRepository = productRepository;
         this.subCategoryRepository = subCategoryRepository;
         this.subCategoryMapper = subCategoryMapper;
     }
@@ -55,9 +60,14 @@ public class SubCategoryServiceImpl implements SubCategoryService {
 
     @Override
     public void deleteSubCategory(Long id) {
-        if (!subCategoryRepository.existsById(id)) {
-            throw new ResourceNotFoundException("SubCategory with ID " + id + " not found");
+        SubCategory subCategory = subCategoryRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Category with ID " + id + " not found"));
+
+        List<Product> products = productRepository.findBySubCategory(subCategory);
+        for (Product product : products) {
+            product.setCategory(null);
         }
+        productRepository.saveAll(products);
         subCategoryRepository.deleteById(id);
     }
 }

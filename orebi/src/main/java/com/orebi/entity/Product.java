@@ -128,7 +128,14 @@ public class Product {
     // helper
     private void updateDiscountedPrice() {
         if (discount != null && discount.isActive() && discount.getType() == DiscountType.SYSTEM_DISCOUNT) {
-            this.discountedPrice = discount.getPrice();
+            if (discount.isPercentage()) {
+                this.discountedPrice = originalPrice - (originalPrice * discount.getDiscountValue() / 100);
+            } else {
+                this.discountedPrice = originalPrice - discount.getDiscountValue();
+            }
+            if (this.discountedPrice <= 0) {
+                this.discountedPrice = 0;
+            }
         } else {
             this.discountedPrice = originalPrice;
         }

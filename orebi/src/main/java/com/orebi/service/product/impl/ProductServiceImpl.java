@@ -1,18 +1,19 @@
 package com.orebi.service.product.impl;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
 import com.orebi.dto.ProductDTO;
 import com.orebi.entity.Category;
+import com.orebi.entity.Discount;
 import com.orebi.entity.Product;
 import com.orebi.entity.SubCategory;
 import com.orebi.exception.ResourceNotFoundException;
 import com.orebi.mapper.ProductMapper;
 import com.orebi.repository.CategoryRepository;
+import com.orebi.repository.DiscountRepository;
 import com.orebi.repository.ProductRepository;
 import com.orebi.repository.SubCategoryRepository;
 import com.orebi.security.PermissionChecker;
@@ -29,18 +30,21 @@ public class ProductServiceImpl implements ProductService {
     private final SubCategoryRepository subCategoryRepository;
     private final ProductMapper productMapper;
     private final PermissionChecker permissionChecker;
+    private final DiscountRepository discountRepository;
 
     public ProductServiceImpl(
             ProductRepository productRepository,
             CategoryRepository categoryRepository,
             SubCategoryRepository subCategoryRepository,
             ProductMapper productMapper,
-            PermissionChecker permissionChecker) {
+            PermissionChecker permissionChecker,
+            DiscountRepository discountRepository) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
         this.subCategoryRepository = subCategoryRepository;
         this.productMapper = productMapper;
         this.permissionChecker = permissionChecker;
+        this.discountRepository = discountRepository;
     }
 
     @Override
@@ -79,32 +83,37 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Optional<ProductDTO> updateProduct(Long id, ProductDTO productDTO) {
+    public ProductDTO updateProduct(Long id, ProductDTO productDTO) {
         // Kiểm tra quyền UPDATE trên PRODUCT
         if (!permissionChecker.hasUserPermission("UPDATE", "PRODUCT")) {
             throw new SecurityException("Access Denied: You do not have permission to update this product.");
         }
 
-        if (productRepository.existsById(id)) {
-            Product product = productMapper.toEntity(productDTO);
-            product.setProductId(id);
+        Product existingProduct = productRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
 
-            if (productDTO.getCategoryId() != null) {
-                Category category = categoryRepository.findById(productDTO.getCategoryId())
-                        .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
-                product.setCategory(category);
-            }
-
-            if (productDTO.getSubCategoryId() != null) {
-                SubCategory subCategory = subCategoryRepository.findById(productDTO.getSubCategoryId())
-                        .orElseThrow(() -> new ResourceNotFoundException("SubCategory not found"));
-                product.setSubCategory(subCategory);
-            }
-
-            Product updatedProduct = productRepository.save(product);
-            return Optional.of(productMapper.toDTO(updatedProduct));
+        if (productDTO.getCategoryId() != null) {
+            Category category = categoryRepository.findById(productDTO.getCategoryId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
+            existingProduct.setCategory(category);
         }
-        return Optional.empty();
+
+        if (productDTO.getSubCategoryId() != null) {
+            SubCategory subCategory = subCategoryRepository.findById(productDTO.getSubCategoryId())
+                    .orElseThrow(() -> new ResourceNotFoundException("SubCategory not found"));
+            existingProduct.setSubCategory(subCategory);
+            if (subCategory.getCategory() != null) {
+                existingProduct.setCategory(subCategory.getCategory());
+            }
+        }
+        if (productDTO.getDiscountId() != null) {
+            Discount discount = discountRepository.findById(productDTO.getDiscountId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Discount not found"));
+            existingProduct.setDiscount(discount);
+        }
+
+        Product updatedProduct = productRepository.save(existingProduct);
+        return productMapper.toDTO(updatedProduct);
     }
 
     @Override

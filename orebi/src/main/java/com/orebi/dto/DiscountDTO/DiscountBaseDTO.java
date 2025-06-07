@@ -1,6 +1,6 @@
 package com.orebi.dto.DiscountDTO;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -10,12 +10,14 @@ public class DiscountBaseDTO {
     private String description;
     private boolean isActive;
     private double price;
+    private double discountValue;
+    private boolean isPercentage;
 
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private LocalDate startDate;
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
+    private LocalDateTime startDate;
 
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private LocalDate endDate;
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
+    private LocalDateTime endDate;
     private String type;
 
     public Long getId() {
@@ -50,19 +52,19 @@ public class DiscountBaseDTO {
         this.isActive = isActive;
     }
 
-    public LocalDate getStartDate() {
+    public LocalDateTime getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDate startDate) {
+    public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }
 
-    public LocalDate getEndDate() {
+    public LocalDateTime getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(LocalDate endDate) {
+    public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
     }
 
@@ -80,6 +82,22 @@ public class DiscountBaseDTO {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public double getDiscountValue() {
+        return discountValue;
+    }
+
+    public void setDiscountValue(double discountValue) {
+        this.discountValue = discountValue;
+    }
+
+    public boolean isPercentage() {
+        return isPercentage;
+    }
+
+    public void setPercentage(boolean isPercentage) {
+        this.isPercentage = isPercentage;
     }
 
 }
