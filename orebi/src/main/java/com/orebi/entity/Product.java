@@ -8,6 +8,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "product")
@@ -23,6 +24,9 @@ public class Product {
     private String description;
     private int quantity_limit;
     private boolean isActive;
+
+    @Transient
+    private double tempPrice;
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = true)
@@ -61,7 +65,10 @@ public class Product {
     }
 
     public void setDiscountedPrice(double discountedPrice) {
-        this.discountedPrice = discountedPrice;
+        if (this.discount == null) {
+            this.discountedPrice = discountedPrice;
+            this.tempPrice = discountedPrice;
+        }
     }
 
     public double getDiscountedPrice() {
@@ -106,7 +113,9 @@ public class Product {
 
     public void setDiscount(Discount discount) {
         this.discount = discount;
-        updateDiscountedPrice();
+        if (discount != null) {
+            updateDiscountedPrice();
+        }
     }
 
     public int getQuantityLimit() {
@@ -137,7 +146,7 @@ public class Product {
                 this.discountedPrice = 0;
             }
         } else {
-            this.discountedPrice = originalPrice;
+            this.discountedPrice = this.tempPrice;
         }
     }
 }

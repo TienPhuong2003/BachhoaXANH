@@ -51,6 +51,7 @@ public class ProductMapper implements EntityMapper<ProductDTO, Product> {
         Product product = new Product();
         product.setName(dto.getName());
         product.setOriginalPrice(dto.getOriginalPrice());
+        product.setDiscountedPrice(dto.getDiscountedPrice());
         product.setUnit(dto.getUnit());
         product.setDescription(dto.getDescription());
         product.setQuantityLimit(dto.getQuantityLimit());

@@ -92,6 +92,25 @@ public class ProductServiceImpl implements ProductService {
         Product existingProduct = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
 
+        if (productDTO.getName() != null) {
+            existingProduct.setName(productDTO.getName());
+        }
+        if (productDTO.getOriginalPrice() != 0) {
+            existingProduct.setOriginalPrice(productDTO.getOriginalPrice());
+        }
+        if (productDTO.getUnit() != null) {
+            existingProduct.setUnit(productDTO.getUnit());
+        }
+        if (productDTO.getDescription() != null) {
+            existingProduct.setDescription(productDTO.getDescription());
+        }
+        if (productDTO.getQuantityLimit() != 0) {
+            existingProduct.setQuantityLimit(productDTO.getQuantityLimit());
+        }
+        if (productDTO.isActive() != existingProduct.isActive()) {
+            existingProduct.setActive(productDTO.isActive());
+        }
+
         if (productDTO.getCategoryId() != null) {
             Category category = categoryRepository.findById(productDTO.getCategoryId())
                     .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
@@ -105,6 +124,9 @@ public class ProductServiceImpl implements ProductService {
             if (subCategory.getCategory() != null) {
                 existingProduct.setCategory(subCategory.getCategory());
             }
+        }
+        if (productDTO.getDiscountedPrice() != 0) {
+            existingProduct.setDiscountedPrice(productDTO.getDiscountedPrice());
         }
         if (productDTO.getDiscountId() != null) {
             Discount discount = discountRepository.findById(productDTO.getDiscountId())

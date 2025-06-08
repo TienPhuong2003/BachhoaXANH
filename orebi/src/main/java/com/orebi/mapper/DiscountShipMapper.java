@@ -18,8 +18,8 @@ public class DiscountShipMapper implements EntityMapper<DiscountShipDTO, Discoun
         dto.setCode(entity.getCode());
         dto.setDescription(entity.getDescription());
         dto.setActive(entity.isActive());
-        dto.setStartDate(entity.getStartDate());
-        dto.setEndDate(entity.getEndDate());
+        dto.setStartDate(entity.getStartDate().toLocalDate());
+        dto.setEndDate(entity.getEndDate().toLocalDate());
         dto.setType(entity.getType() != null ? entity.getType().name() : null);
         dto.setMaxShipDiscount(entity.getMaxShipDiscount());
         dto.setMinShipDiscount(entity.getMinShipDiscount());
@@ -36,8 +36,8 @@ public class DiscountShipMapper implements EntityMapper<DiscountShipDTO, Discoun
         entity.setCode(dto.getCode());
         entity.setDescription(dto.getDescription());
         entity.setActive(dto.isActive());
-        entity.setStartDate(dto.getStartDate());
-        entity.setEndDate(dto.getEndDate());
+        entity.setStartDate(dto.getStartDate().atStartOfDay());
+        entity.setEndDate(dto.getEndDate().atStartOfDay());
         if (dto.getType() != null) {
             entity.setType(DiscountType.valueOf(dto.getType()));
         }
