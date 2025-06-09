@@ -3,16 +3,16 @@ package com.orebi.dto;
 public class ProductDTO {
     private Long productId;
     private String name;
-    private double originalPrice;
+    private Double originalPrice;
     private String unit;
     private String description;
     private Long categoryId;
     private Long subCategoryId;
     private Long discountId;
-    private int quantityLimit;
+    private Integer quantityLimit;
     private boolean isActive;
 
-    private double discountedPrice;
+    private Double discountedPrice;
 
     // --- Getter & Setter ---
 
@@ -32,11 +32,11 @@ public class ProductDTO {
         this.name = name;
     }
 
-    public double getOriginalPrice() {
+    public Double getOriginalPrice() {
         return originalPrice;
     }
 
-    public void setOriginalPrice(double originalPrice) {
+    public void setOriginalPrice(Double originalPrice) {
         this.originalPrice = originalPrice;
     }
 
@@ -80,19 +80,19 @@ public class ProductDTO {
         this.discountId = discountId;
     }
 
-    public double getDiscountedPrice() {
+    public Double getDiscountedPrice() {
         return discountedPrice;
     }
 
-    public void setDiscountedPrice(double discountedPrice) {
+    public void setDiscountedPrice(Double discountedPrice) {
         this.discountedPrice = discountedPrice;
     }
 
-    public int getQuantityLimit() {
+    public Integer getQuantityLimit() {
         return quantityLimit;
     }
 
-    public void setQuantityLimit(int quantityLimit) {
+    public void setQuantityLimit(Integer quantityLimit) {
         this.quantityLimit = quantityLimit;
     }
 

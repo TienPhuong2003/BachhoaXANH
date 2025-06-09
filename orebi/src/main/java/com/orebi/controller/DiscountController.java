@@ -55,10 +55,7 @@ public class DiscountController {
             @RequestBody ApplyDiscountRequest request) {
         Long discountId = request.getDiscountId();
         List<Long> productIds = request.getProductIds();
-        if (discountId == null || productIds == null || productIds.isEmpty()) {
-            throw new IllegalArgumentException("Discount ID and product IDs must not be null or empty");
-        }
-        discountService.applySystemDiscountToProducts(discountId, productIds);
+        discountService.setSystemDiscountForProducts(discountId, productIds);
         return ResponseEntity.ok("Discount applied successfully to products");
     }
 

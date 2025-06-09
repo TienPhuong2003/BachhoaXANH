@@ -95,7 +95,7 @@ public class ProductServiceImpl implements ProductService {
         if (productDTO.getName() != null) {
             existingProduct.setName(productDTO.getName());
         }
-        if (productDTO.getOriginalPrice() != 0) {
+        if (productDTO.getOriginalPrice() != null) {
             existingProduct.setOriginalPrice(productDTO.getOriginalPrice());
         }
         if (productDTO.getUnit() != null) {
@@ -103,9 +103,6 @@ public class ProductServiceImpl implements ProductService {
         }
         if (productDTO.getDescription() != null) {
             existingProduct.setDescription(productDTO.getDescription());
-        }
-        if (productDTO.getQuantityLimit() != 0) {
-            existingProduct.setQuantityLimit(productDTO.getQuantityLimit());
         }
         if (productDTO.isActive() != existingProduct.isActive()) {
             existingProduct.setActive(productDTO.isActive());
@@ -117,6 +114,10 @@ public class ProductServiceImpl implements ProductService {
             existingProduct.setCategory(category);
         }
 
+        if (productDTO.getQuantityLimit() != null) {
+            existingProduct.setQuantityLimit(productDTO.getQuantityLimit());
+        }
+
         if (productDTO.getSubCategoryId() != null) {
             SubCategory subCategory = subCategoryRepository.findById(productDTO.getSubCategoryId())
                     .orElseThrow(() -> new ResourceNotFoundException("SubCategory not found"));
@@ -125,10 +126,17 @@ public class ProductServiceImpl implements ProductService {
                 existingProduct.setCategory(subCategory.getCategory());
             }
         }
-        if (productDTO.getDiscountedPrice() != 0) {
+        if (productDTO.getDiscountedPrice() != null) {
             existingProduct.setDiscountedPrice(productDTO.getDiscountedPrice());
         }
-        if (productDTO.getDiscountId() != null) {
+        if (productDTO.getDiscountId() == null) {
+            existingProduct.setDiscount(null);
+            if (productDTO.getDiscountedPrice() != null) {
+                existingProduct.setDiscountedPrice(productDTO.getDiscountedPrice());
+            } else {
+                existingProduct.setDiscountedPrice(existingProduct.getOriginalPrice());
+            }
+        } else {
             Discount discount = discountRepository.findById(productDTO.getDiscountId())
                     .orElseThrow(() -> new ResourceNotFoundException("Discount not found"));
             existingProduct.setDiscount(discount);

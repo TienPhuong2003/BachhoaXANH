@@ -6,9 +6,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "product")
@@ -25,9 +23,6 @@ public class Product {
     private int quantity_limit;
     private boolean isActive;
 
-    @Transient
-    private double tempPrice;
-
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = true)
     private Category category;
@@ -36,7 +31,7 @@ public class Product {
     @JoinColumn(name = "sub_category_id", nullable = true)
     private SubCategory subCategory;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "discount", nullable = true)
     private Discount discount;
 
@@ -67,7 +62,6 @@ public class Product {
     public void setDiscountedPrice(double discountedPrice) {
         if (this.discount == null) {
             this.discountedPrice = discountedPrice;
-            this.tempPrice = discountedPrice;
         }
     }
 
@@ -115,6 +109,8 @@ public class Product {
         this.discount = discount;
         if (discount != null) {
             updateDiscountedPrice();
+        } else {
+            this.discountedPrice = this.originalPrice;
         }
     }
 
@@ -142,11 +138,6 @@ public class Product {
             } else {
                 this.discountedPrice = originalPrice - discount.getDiscountValue();
             }
-            if (this.discountedPrice <= 0) {
-                this.discountedPrice = 0;
-            }
-        } else {
-            this.discountedPrice = this.tempPrice;
         }
     }
 }

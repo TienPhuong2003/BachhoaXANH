@@ -71,14 +71,15 @@ public class DiscountServiceImpl implements DiscountService {
     }
 
     @Override
-    public void applySystemDiscountToProducts(Long discountId, List<Long> productIds) {
-        Discount discount = discountRepository.findById(discountId)
-                .orElseThrow(() -> new RuntimeException("Discount not found"));
-
-        if (discount.getType() != DiscountType.SYSTEM_DISCOUNT) {
-            throw new IllegalArgumentException("Discount is not SYSTEM_DISCOUNT");
+    public void setSystemDiscountForProducts(Long discountId, List<Long> productIds) {
+        Discount discount = null;
+        if (discountId != null) {
+            discount = discountRepository.findById(discountId)
+                    .orElseThrow(() -> new RuntimeException("Discount not found"));
+            if (discount.getType() != DiscountType.SYSTEM_DISCOUNT) {
+                throw new IllegalArgumentException("Discount is not SYSTEM_DISCOUNT");
+            }
         }
-
         List<Product> products = productRepository.findAllById(productIds);
         for (Product product : products) {
             product.setDiscount(discount);

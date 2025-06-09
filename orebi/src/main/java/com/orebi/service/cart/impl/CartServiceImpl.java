@@ -1,11 +1,8 @@
 package com.orebi.service.cart.impl;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,18 +11,12 @@ import com.orebi.dto.LineItemDTO;
 import com.orebi.dto.OrderDTO;
 import com.orebi.entity.Cart;
 import com.orebi.entity.LineItem;
-import com.orebi.entity.Order;
-import com.orebi.entity.OrderDetail;
-import com.orebi.entity.OrderStatus;
-import com.orebi.entity.Product;
 import com.orebi.entity.User;
 import com.orebi.exception.ResourceNotFoundException;
+import com.orebi.helper.SecurityHelper;
 import com.orebi.mapper.CartMapper;
 import com.orebi.repository.CartRepository;
-import com.orebi.repository.LineItemRepository;
-import com.orebi.repository.OrderRepository;
 import com.orebi.repository.UserRepository;
-import com.orebi.security.CustomUserDetails;
 import com.orebi.service.cart.CartService;
 import com.orebi.service.lineitem.LineItemService;
 import com.orebi.service.order.OrderService;
@@ -38,21 +29,18 @@ public class CartServiceImpl implements CartService {
     private final UserRepository userRepository;
     private final CartMapper cartMapper;
     private final LineItemService lineItemService;
+    private final SecurityHelper helper;
 
     public CartServiceImpl(CartRepository cartRepository, OrderService orderService,
             UserRepository userRepository, CartMapper cartMapper,
-            LineItemService lineItemService) {
+            LineItemService lineItemService,
+            SecurityHelper helper) {
         this.cartRepository = cartRepository;
         this.orderService = orderService;
         this.userRepository = userRepository;
         this.cartMapper = cartMapper;
         this.lineItemService = lineItemService;
-    }
-
-    private Long getCurrentUserId() {
-        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication()
-                .getPrincipal();
-        return userDetails.getUserId();
+        this.helper = helper;
     }
 
     @Override
@@ -71,7 +59,7 @@ public class CartServiceImpl implements CartService {
     @Override
     @Transactional
     public Optional<CartDTO> getCartByUserId() {
-        Long userId = getCurrentUserId();
+        Long userId = helper.getCurrentUserId();
         Cart cart = getOrCreateCartEntity(userId);
         CartDTO cartDTO = cartMapper.toDTO(cart);
         List<LineItemDTO> lineItems = lineItemService.getLineItemsByCartId(cart.getCartId());
@@ -82,7 +70,7 @@ public class CartServiceImpl implements CartService {
     @Override
     @Transactional
     public void checkout(List<Long> selectedLineItemIds, OrderDTO orderDTO) {
-        Cart cart = getOrCreateCartEntity(getCurrentUserId());
+        Cart cart = getOrCreateCartEntity(helper.getCurrentUserId());
 
         List<LineItem> selectedItems = cart.getLineItems().stream()
                 .filter(item -> selectedLineItemIds.contains(item.getLineItemId()))
@@ -92,9 +80,6 @@ public class CartServiceImpl implements CartService {
             throw new IllegalStateException("Không có sản phẩm nào được chọn để đặt hàng.");
         }
 
-        
-
     }
 
-    
 }

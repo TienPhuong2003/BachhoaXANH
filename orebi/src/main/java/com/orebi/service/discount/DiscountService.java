@@ -40,5 +40,5 @@ public interface DiscountService {
 
     void deleteShippingDiscount(Long id);
 
-    void applySystemDiscountToProducts(Long discountId, List<Long> productIds);
+    void setSystemDiscountForProducts(Long discountId, List<Long> productIds);
 }

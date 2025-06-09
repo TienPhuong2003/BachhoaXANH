@@ -88,11 +88,19 @@ public class Discount {
 
     public boolean isActive() {
         LocalDateTime now = LocalDateTime.now();
-        return isActive && (startDate == null || !now.isBefore(startDate))
-                && (endDate == null || !now.isAfter(endDate));
+        if ((startDate != null && now.isBefore(startDate)) || (endDate != null && now.isAfter(endDate))) {
+            return false;
+        }
+        return isActive;
     }
 
     public void setActive(boolean isActive) {
+        LocalDateTime now = LocalDateTime.now();
+        if (isActive) {
+            if ((startDate != null && now.isBefore(startDate)) || (endDate != null && now.isAfter(endDate))) {
+                throw new IllegalStateException("Không thể kích hoạt discount ngoài thời gian hiệu lực!");
+            }
+        }
         this.isActive = isActive;
     }
 
@@ -151,4 +159,5 @@ public class Discount {
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
+
 }
