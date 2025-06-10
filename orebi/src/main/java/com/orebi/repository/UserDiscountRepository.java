@@ -10,7 +10,7 @@ import com.orebi.entity.UserDiscount;
 
 @Repository
 public interface UserDiscountRepository extends JpaRepository<UserDiscount, Long> {
-    List<UserDiscount> findByUser_Id(Long userId);
+    List<UserDiscount> findByUser_UserId(Long userId);
 
-    Optional<UserDiscount> findByUser_IdAndDiscount_Id(Long userId, Long discountId);
+    Optional<UserDiscount> findByUser_UserIdAndDiscount_Id(Long userId, Long discountId);
 }

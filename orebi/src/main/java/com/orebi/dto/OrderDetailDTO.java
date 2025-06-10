@@ -35,8 +35,6 @@ public class OrderDetailDTO {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
-        // Optionally update totalPrice here if unitPrice is already set
-        this.totalPrice = this.unitPrice * quantity;
     }
 
     public double getUnitPrice() {
@@ -45,8 +43,6 @@ public class OrderDetailDTO {
 
     public void setUnitPrice(double unitPrice) {
         this.unitPrice = unitPrice;
-        // Optionally update totalPrice here if quantity is already set
-        this.totalPrice = unitPrice * this.quantity;
     }
 
     public double getTotalPrice() {

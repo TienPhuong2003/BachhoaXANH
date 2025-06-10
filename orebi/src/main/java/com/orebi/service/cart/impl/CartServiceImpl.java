@@ -79,7 +79,7 @@ public class CartServiceImpl implements CartService {
         if (selectedItems.isEmpty()) {
             throw new IllegalStateException("Không có sản phẩm nào được chọn để đặt hàng.");
         }
-
+    
     }
 
 }

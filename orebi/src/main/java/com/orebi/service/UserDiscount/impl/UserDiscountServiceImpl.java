@@ -39,7 +39,7 @@ public class UserDiscountServiceImpl implements UserDiscountService {
     @Override
     public List<UserDiscountDTO> getAllByUserId() {
         Long userId = helper.getCurrentUserId();
-        return userDiscountRepository.findByUser_Id(userId)
+        return userDiscountRepository.findByUser_UserId(userId)
                 .stream()
                 .map(userDiscountMapper::toDTO)
                 .collect(Collectors.toList());
@@ -55,7 +55,7 @@ public class UserDiscountServiceImpl implements UserDiscountService {
             throw new IllegalArgumentException("User or Discount not found");
         }
 
-        var existing = userDiscountRepository.findByUser_IdAndDiscount_Id(userId, discountId);
+        var existing = userDiscountRepository.findByUser_UserIdAndDiscount_Id(userId, discountId);
         if (existing.isPresent()) {
             return userDiscountMapper.toDTO(existing.get());
         }

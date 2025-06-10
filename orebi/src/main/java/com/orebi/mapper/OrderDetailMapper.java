@@ -25,7 +25,6 @@ public class OrderDetailMapper implements EntityMapper<OrderDetailDTO, OrderDeta
         dto.setSnapshotProductId(entity.getSnapshotProductId());
         dto.setSnapshotProductName(entity.getSnapshotProductName());
         dto.setSnapshotProductImage(entity.getSnapshotProductImage());
-        dto.setSnapshotPrice(entity.getSnapshotPrice());
 
         return dto;
     }
@@ -49,7 +48,6 @@ public class OrderDetailMapper implements EntityMapper<OrderDetailDTO, OrderDeta
         entity.setSnapshotProductId(dto.getSnapshotProductId());
         entity.setSnapshotProductName(dto.getSnapshotProductName());
         entity.setSnapshotProductImage(dto.getSnapshotProductImage());
-        entity.setSnapshotPrice(dto.getSnapshotPrice());
 
         return entity;
     }

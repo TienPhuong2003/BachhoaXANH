@@ -1,15 +1,20 @@
 package com.orebi.service.order.impl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
 import com.orebi.dto.OrderDTO;
+import com.orebi.entity.LineItem;
 import com.orebi.entity.Order;
+import com.orebi.entity.OrderDetail;
 import com.orebi.entity.OrderStatus;
 import com.orebi.mapper.OrderMapper;
 import com.orebi.repository.OrderRepository;
 import com.orebi.service.order.OrderService;
+import com.orebi.entity.User;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -23,75 +28,34 @@ public class OrderServiceImpl implements OrderService {
         this.orderMapper = orderMapper;
     }
 
-    @Override
-    public OrderDTO createOrder(OrderDTO orderDTO) {
-        Order order = orderMapper.toEntity(orderDTO);
-        Order savedOrder = orderRepository.save(order);
-        return orderMapper.toDTO(savedOrder);
-    }
+    @Transactional
+    public OrderDTO createOrder(User user, List<LineItem> items, OrderDTO dto) {
+        Order order = new Order();
+        order.setUser(user);
+        order.setOrderDate(LocalDateTime.now());
+        order.setStatus(OrderStatus.PENDING);
+        order.setPaymentMethod(dto.getPaymentMethod());
+        order.setShippingAddress(dto.getShippingAddress());
+        order.setPhone(dto.getPhone());
+        order.setNote(dto.getNote());
+        order.setShippingFee(dto.getShippingFee());
+        order.setRecipientName(dto.getRecipientName());
+        order.setRecipientPhone(dto.getRecipientPhone());
+        order.setBankTransferImage(dto.getBankTransferImage());
+        order.setPaymentNote(dto.getPaymentNote());
+        order.setVnpayTransactionNo(dto.getVnpayTransactionNo());
+        order.setIsPaid(dto.isPaid());
+        order.setCreatedAt(LocalDateTime.now());
+        order.setUpdatedAt(LocalDateTime.now());
 
-    @Override
-    public OrderDTO getOrderById(Long orderId) {
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Order not found"));
+        order.setTotalPrice(dto.getTotalPrice());
+
+        orderRepository.save(order);
+
+        List<OrderDetail> orderDetails = orderDetailService.createFromLineItems(order, items);
+        order.setOrderDetails(orderDetails);
+
         return orderMapper.toDTO(order);
     }
 
-    @Override
-    public List<OrderDTO> getOrdersByUser(Long userId) {
-        List<Order> orders = orderRepository.findByUser_UserId(userId);
-        return orders.stream().map(orderMapper::toDTO).toList();
-    }
-
-    @Override
-    public List<OrderDTO> getAllOrders() {
-        return orderRepository.findAll().stream().map(orderMapper::toDTO).toList();
-    }
-
-    @Override
-    public OrderDTO updateOrderStatus(Long orderId, OrderStatus status) {
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Order not found"));
-        order.setStatus(status);
-        Order savedOrder = orderRepository.save(order);
-        return orderMapper.toDTO(savedOrder);
-    }
-
-    @Override
-    public OrderDTO updateOrderInfo(Long orderId, OrderDTO updatedOrderDTO) {
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Order not found"));
-        // Cập nhật các trường cần thiết từ updatedOrderDTO
-        if (updatedOrderDTO.getShippingAddress() != null
-                && !updatedOrderDTO.getShippingAddress().equals(order.getShippingAddress())) {
-            order.setShippingAddress(updatedOrderDTO.getShippingAddress());
-        }
-        if (updatedOrderDTO.getPhone() != null
-                && !updatedOrderDTO.getPhone().equals(order.getPhone())) {
-            order.setPhone(updatedOrderDTO.getPhone());
-        }
-        if (updatedOrderDTO.getRecipientName() != null
-                && !updatedOrderDTO.getRecipientName().equals(order.getRecipientName())) {
-            order.setRecipientName(updatedOrderDTO.getRecipientName());
-        }
-        if (updatedOrderDTO.getRecipientPhone() != null
-                && !updatedOrderDTO.getRecipientPhone().equals(order.getRecipientPhone())) {
-            order.setRecipientPhone(updatedOrderDTO.getRecipientPhone());
-        }
-        if (updatedOrderDTO.getNote() != null
-                && !updatedOrderDTO.getNote().equals(order.getNote())) {
-            order.setNote(updatedOrderDTO.getNote());
-        }
-        order.setUpdatedAt(java.time.LocalDateTime.now());
-        Order savedOrder = orderRepository.save(order);
-        return orderMapper.toDTO(savedOrder);
-    }
-
-    @Override
-    public void cancelOrder(Long orderId) {
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Order not found"));
-        order.setStatus(OrderStatus.CANCELLED);
-        orderRepository.save(order);
-    }
 }

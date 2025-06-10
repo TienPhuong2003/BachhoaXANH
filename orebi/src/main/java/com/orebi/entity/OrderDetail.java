@@ -27,8 +27,6 @@ public class OrderDetail {
     private Long snapshotProductId;
     private String snapshotProductName;
     private String snapshotProductImage;
-    private double snapshotPrice;
-
 
     public Long getOrderDetailId() {
         return orderDetailId;
@@ -92,13 +90,5 @@ public class OrderDetail {
 
     public void setSnapshotProductImage(String snapshotProductImage) {
         this.snapshotProductImage = snapshotProductImage;
-    }
-
-    public double getSnapshotPrice() {
-        return snapshotPrice;
-    }
-
-    public void setSnapshotPrice(double snapshotPrice) {
-        this.snapshotPrice = snapshotPrice;
     }
 }
