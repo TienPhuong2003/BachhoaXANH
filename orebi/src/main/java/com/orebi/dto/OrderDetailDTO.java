@@ -11,7 +11,8 @@ public class OrderDetailDTO {
     private Long snapshotProductId;
     private String snapshotProductName;
     private String snapshotProductImage;
-    private double snapshotPrice;
+    private Double snapshotPrice;
+    private Double shippingFee;
 
     public Long getOrderDetailId() {
         return orderDetailId;
@@ -77,11 +78,19 @@ public class OrderDetailDTO {
         this.snapshotProductImage = snapshotProductImage;
     }
 
-    public double getSnapshotPrice() {
+    public Double getSnapshotPrice() {
         return snapshotPrice;
     }
 
-    public void setSnapshotPrice(double snapshotPrice) {
+    public void setSnapshotPrice(Double snapshotPrice) {
         this.snapshotPrice = snapshotPrice;
+    }
+
+    public Double getShippingFee() {
+        return shippingFee;
+    }
+
+    public void setShippingFee(Double shippingFee) {
+        this.shippingFee = shippingFee;
     }
 }

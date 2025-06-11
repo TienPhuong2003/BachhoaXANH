@@ -12,6 +12,6 @@ public interface CartService {
 
     Optional<CartDTO> getCartByUserId();
 
-    void checkout(List<Long> selectedLineItemIds, OrderDTO orderDTO);
+    OrderDTO checkout(List<Long> selectedLineItemIds, OrderDTO orderDTO);
 
 }

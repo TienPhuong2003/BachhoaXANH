@@ -4,17 +4,19 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.orebi.dto.OrderDTO;
 import com.orebi.entity.LineItem;
 import com.orebi.entity.Order;
+import com.orebi.dto.UserDTO;
 import com.orebi.entity.OrderDetail;
 import com.orebi.entity.OrderStatus;
+import com.orebi.entity.User;
 import com.orebi.mapper.OrderMapper;
 import com.orebi.repository.OrderRepository;
 import com.orebi.service.order.OrderService;
-import com.orebi.entity.User;
-import org.springframework.transaction.annotation.Transactional;
+import com.orebi.service.orderdetail.OrderDetailService;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -23,11 +25,16 @@ public class OrderServiceImpl implements OrderService {
 
     private final OrderMapper orderMapper;
 
-    public OrderServiceImpl(OrderRepository orderRepository, OrderMapper orderMapper) {
+    private final OrderDetailService orderDetailService;
+
+    public OrderServiceImpl(OrderRepository orderRepository, OrderMapper orderMapper,
+            OrderDetailService orderDetailService) {
         this.orderRepository = orderRepository;
         this.orderMapper = orderMapper;
+        this.orderDetailService = orderDetailService;
     }
 
+    @Override
     @Transactional
     public OrderDTO createOrder(User user, List<LineItem> items, OrderDTO dto) {
         Order order = new Order();
@@ -58,4 +65,42 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.toDTO(order);
     }
 
+    @Override
+    public OrderDTO getOrderById(Long id) {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Order not found with id: " + id));
+        return orderMapper.toDTO(order);
+    }
+
+    @Override
+    public List<OrderDTO> getOrdersByUser(UserDTO user) {
+        List<Order> orders = orderRepository.findByUserOrderByOrderDateDesc(user);
+        return orders.stream()
+                .map(orderMapper::toDTO)
+                .toList();
+    }
+
+    @Override
+    @Transactional
+    public void updateOrderStatus(Long orderId, OrderStatus status) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found with id: " + orderId));
+        order.setStatus(status);
+        order.setUpdatedAt(LocalDateTime.now());
+        orderRepository.save(order);
+    }
+
+    @Override
+    @Transactional
+    public void cancelOrder(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found with id: " + orderId));
+        if (order.getStatus() == OrderStatus.PENDING) {
+            order.setStatus(OrderStatus.CANCELLED);
+            order.setUpdatedAt(LocalDateTime.now());
+            orderRepository.save(order);
+        } else {
+            throw new RuntimeException("Cannot cancel order with status: " + order.getStatus());
+        }
+    }
 }

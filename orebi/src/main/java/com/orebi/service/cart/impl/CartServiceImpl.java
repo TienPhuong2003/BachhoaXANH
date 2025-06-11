@@ -69,8 +69,9 @@ public class CartServiceImpl implements CartService {
 
     @Override
     @Transactional
-    public void checkout(List<Long> selectedLineItemIds, OrderDTO orderDTO) {
+    public OrderDTO checkout(List<Long> selectedLineItemIds, OrderDTO orderDTO) {
         Cart cart = getOrCreateCartEntity(helper.getCurrentUserId());
+        User user = cart.getUser();
 
         List<LineItem> selectedItems = cart.getLineItems().stream()
                 .filter(item -> selectedLineItemIds.contains(item.getLineItemId()))
@@ -79,7 +80,14 @@ public class CartServiceImpl implements CartService {
         if (selectedItems.isEmpty()) {
             throw new IllegalStateException("Không có sản phẩm nào được chọn để đặt hàng.");
         }
-    
+
+        // Tạo đơn hàng từ giỏ hàng
+        OrderDTO createdOrder = orderService.createOrder(user, selectedItems, orderDTO);
+
+        cart.getLineItems().removeAll(selectedItems);
+        cartRepository.save(cart);
+
+        return createdOrder;
     }
 
 }

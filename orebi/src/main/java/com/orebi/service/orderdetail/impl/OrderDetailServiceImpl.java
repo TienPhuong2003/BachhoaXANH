@@ -2,16 +2,18 @@ package com.orebi.service.orderdetail.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.stereotype.Service;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.orebi.dto.OrderDetailDTO;
 import com.orebi.entity.LineItem;
+import com.orebi.entity.Order;
 import com.orebi.entity.OrderDetail;
 import com.orebi.entity.Product;
 import com.orebi.mapper.OrderDetailMapper;
 import com.orebi.repository.OrderDetailRepository;
 import com.orebi.service.orderdetail.OrderDetailService;
-import com.orebi.entity.Order;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class OrderDetailServiceImpl implements OrderDetailService {
@@ -24,6 +26,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
         this.orderDetailMapper = orderDetailMapper;
     }
 
+    @Override
     @Transactional
     public List<OrderDetail> createFromLineItems(Order order, List<LineItem> items) {
         List<OrderDetail> details = new ArrayList<>();
@@ -39,12 +42,35 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 
             detail.setSnapshotProductId(p.getProductId());
             detail.setSnapshotProductName(p.getName());
-            detail.setSnapshotProductImage();
+            detail.setSnapshotPrice(order.getTotalPrice());
+            detail.setShippingFee(order.getShippingFee());
 
             details.add(detail);
         }
 
         return orderDetailRepository.saveAll(details);
+    }
+
+    @Override
+    public List<OrderDetailDTO> getByOrderId(Long orderId) {
+        List<OrderDetail> details = orderDetailRepository.findByOrder_OrderId(orderId);
+        return orderDetailMapper.toDTOList(details);
+    }
+
+    @Override
+    public OrderDetailDTO getById(Long orderDetailId) {
+        OrderDetail detail = orderDetailRepository.findById(orderDetailId)
+                .orElseThrow(() -> new RuntimeException("Order detail not found: " + orderDetailId));
+        return orderDetailMapper.toDTO(detail);
+    }
+
+    @Override
+    @Transactional
+    public void deleteById(Long orderDetailId) {
+        if (!orderDetailRepository.existsById(orderDetailId)) {
+            throw new RuntimeException("Order detail not found to delete: " + orderDetailId);
+        }
+        orderDetailRepository.deleteById(orderDetailId);
     }
 
 }
