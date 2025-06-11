@@ -39,6 +39,11 @@ public class OrderController {
         return orderService.getAllOrder();
     }
     
+    @GetMapping("/{status}")
+    public List<OrderDTO> getMethodName(@PathVariable OrderStatus status) {
+        return orderService.getOrdersByStatus(status);
+    }
+    
 
     // Lấy đơn hàng theo ID
     @GetMapping("/{id}")

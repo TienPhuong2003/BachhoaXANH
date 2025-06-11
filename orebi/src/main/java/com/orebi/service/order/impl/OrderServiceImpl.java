@@ -98,6 +98,14 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public List<OrderDTO> getOrdersByStatus(OrderStatus status) {
+        List<Order> orders = orderRepository.findByStatus(status);
+        return orders.stream()
+                .map(orderMapper::toDTO)
+                .toList();
+    }
+
+    @Override
     @Transactional
     public void updateOrderStatus(Long orderId, OrderStatus status) {
         Order order = orderRepository.findById(orderId)

@@ -3,6 +3,9 @@ package com.orebi.entity;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -29,6 +32,7 @@ public class Order {
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
     
     private LocalDateTime orderDate;

@@ -20,4 +20,6 @@ public interface OrderService {
     List<OrderDTO> getAllOrder();
     
     void cancelOrder(Long orderId);
+
+    List<OrderDTO> getOrdersByStatus(OrderStatus status);
 }
