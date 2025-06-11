@@ -12,6 +12,7 @@ import com.orebi.entity.Order;
 import com.orebi.dto.UserDTO;
 import com.orebi.entity.OrderDetail;
 import com.orebi.entity.OrderStatus;
+import com.orebi.entity.PaymentMethod;
 import com.orebi.entity.User;
 import com.orebi.mapper.OrderMapper;
 import com.orebi.repository.OrderRepository;
@@ -34,14 +35,30 @@ public class OrderServiceImpl implements OrderService {
         this.orderDetailService = orderDetailService;
     }
 
+
+    @Override
+    public List<OrderDTO> getAllOrder() {
+        List<Order> orders = orderRepository.findAll();
+        return orderMapper.toDTOList(orders);
+    }
+    
     @Override
     @Transactional
     public OrderDTO createOrder(User user, List<LineItem> items, OrderDTO dto) {
         Order order = new Order();
         order.setUser(user);
         order.setOrderDate(LocalDateTime.now());
-        order.setStatus(OrderStatus.PENDING);
         order.setPaymentMethod(dto.getPaymentMethod());
+        if (order.getPaymentMethod() == PaymentMethod.BANKING) {
+             order.setStatus(OrderStatus.PENDING);
+             order.setPaymentNote("chờ chuyển khoản ngân hàng");
+        } else if (order.getPaymentMethod() == PaymentMethod.VNPAY) {
+            order.setStatus(OrderStatus.PENDING_PAYMENT);
+            order.setPaymentNote("chờ chuyển khoản VNPAY");
+        } else if(order.getPaymentMethod() == PaymentMethod.COD) {
+            order.setStatus(OrderStatus.PENDING);
+            order.setPaymentNote("thanh toán khi nhận hàng");
+        }
         order.setShippingAddress(dto.getShippingAddress());
         order.setPhone(dto.getPhone());
         order.setNote(dto.getNote());
@@ -95,7 +112,7 @@ public class OrderServiceImpl implements OrderService {
     public void cancelOrder(Long orderId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found with id: " + orderId));
-        if (order.getStatus() == OrderStatus.PENDING) {
+        if (order.getStatus() == OrderStatus.PENDING || order.getStatus() == OrderStatus.PENDING_PAYMENT) {
             order.setStatus(OrderStatus.CANCELLED);
             order.setUpdatedAt(LocalDateTime.now());
             orderRepository.save(order);

@@ -60,6 +60,7 @@ public class Order {
     private String note;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private boolean reminderSent = false;
 
     @JsonManagedReference
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
@@ -125,4 +126,6 @@ public class Order {
     public String getRecipientPhone() { return recipientPhone; }
     public void setRecipientPhone(String recipientPhone) { this.recipientPhone = recipientPhone; }
 
+    public boolean isReminderSent() { return reminderSent; }
+    public void setReminderSent(boolean reminderSent) { this.reminderSent = reminderSent; }
 }

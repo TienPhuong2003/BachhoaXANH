@@ -1,6 +1,5 @@
 package com.orebi.controller;
 
-import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 
@@ -9,14 +8,14 @@ import org.springframework.web.bind.annotation.*;
 
 import com.orebi.dto.OrderDTO;
 import com.orebi.dto.UserDTO;
-import com.orebi.entity.LineItem;
 import com.orebi.entity.OrderStatus;
-import com.orebi.entity.User;
 import com.orebi.service.cart.CartService;
 import com.orebi.service.order.OrderService;
 import com.orebi.service.user.UserService;
 import com.orebi.helper.SecurityHelper;
-import com.orebi.repository.UserRepository;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/api/orders")
@@ -35,6 +34,12 @@ public class OrderController {
         this.helper = helper;
     }
 
+    @GetMapping()
+    public List<OrderDTO> getAllOrders() {
+        return orderService.getAllOrder();
+    }
+    
+
     // Lấy đơn hàng theo ID
     @GetMapping("/{id}")
     public ResponseEntity<?> getOrderById(@PathVariable Long id) {
@@ -47,14 +52,13 @@ public class OrderController {
     }
 
     // Lấy danh sách đơn hàng của user hiện tại
-    @GetMapping
+    @GetMapping("/history")
     public ResponseEntity<List<OrderDTO>> getUserOrders() {
         UserDTO user = userService.getCurrentUser().get();
         List<OrderDTO> orders = orderService.getOrdersByUser(user);
         return ResponseEntity.ok(orders);
     }
 
-    // Cập nhật trạng thái đơn hàng
     @PutMapping("/{id}/status")
     public ResponseEntity<?> updateOrderStatus(@PathVariable Long id, @RequestParam("status") OrderStatus status) {
         try {
@@ -65,7 +69,6 @@ public class OrderController {
         }
     }
 
-    // Hủy đơn hàng (nếu đang ở trạng thái PENDING)
     @DeleteMapping("/{id}")
     public ResponseEntity<?> cancelOrder(@PathVariable Long id) {
         try {

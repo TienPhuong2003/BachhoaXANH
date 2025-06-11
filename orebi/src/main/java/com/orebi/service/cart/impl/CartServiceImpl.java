@@ -2,6 +2,7 @@ package com.orebi.service.cart.impl;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -84,10 +85,12 @@ public class CartServiceImpl implements CartService {
         // Tạo đơn hàng từ giỏ hàng
         OrderDTO createdOrder = orderService.createOrder(user, selectedItems, orderDTO);
 
-        cart.getLineItems().removeAll(selectedItems);
-        cartRepository.save(cart);
+        // xóa line items đã chọn khỏi giỏ hàng
+        List<Long> selectedItemIds = selectedItems.stream()
+                .map(LineItem::getLineItemId)
+                .collect(Collectors.toList());
 
+        lineItemService.deleteLineItems(selectedItemIds);
         return createdOrder;
     }
-
 }

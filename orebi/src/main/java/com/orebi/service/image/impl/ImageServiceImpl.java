@@ -34,6 +34,7 @@ public class ImageServiceImpl implements ImageService {
             case "CATEGORY" -> "orebi/Category";
             case "SUB_CATEGORY" -> "orebi/SubCategory";
             case "PRODUCT_DETAIL" -> "orebi/ProductDetail";
+            case "ORDER" -> "orebi/Banking";
             default -> throw new IllegalArgumentException("Invalid target type: " + targetType);
         };
 
