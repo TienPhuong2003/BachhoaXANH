@@ -7,12 +7,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.orebi.dto.OrderDTO;
+import com.orebi.dto.UserDTO;
 import com.orebi.entity.LineItem;
 import com.orebi.entity.Order;
-import com.orebi.dto.UserDTO;
 import com.orebi.entity.OrderDetail;
 import com.orebi.entity.OrderStatus;
-import com.orebi.entity.PaymentMethod;
 import com.orebi.entity.User;
 import com.orebi.mapper.OrderMapper;
 import com.orebi.repository.OrderRepository;
@@ -35,13 +34,12 @@ public class OrderServiceImpl implements OrderService {
         this.orderDetailService = orderDetailService;
     }
 
-
     @Override
     public List<OrderDTO> getAllOrder() {
         List<Order> orders = orderRepository.findAll();
         return orderMapper.toDTOList(orders);
     }
-    
+
     @Override
     @Transactional
     public OrderDTO createOrder(User user, List<LineItem> items, OrderDTO dto) {
@@ -49,16 +47,23 @@ public class OrderServiceImpl implements OrderService {
         order.setUser(user);
         order.setOrderDate(LocalDateTime.now());
         order.setPaymentMethod(dto.getPaymentMethod());
-        if (order.getPaymentMethod() == PaymentMethod.BANKING) {
-             order.setStatus(OrderStatus.PENDING);
-             order.setPaymentNote("chờ chuyển khoản ngân hàng");
-        } else if (order.getPaymentMethod() == PaymentMethod.VNPAY) {
-            order.setStatus(OrderStatus.PENDING_PAYMENT);
-            order.setPaymentNote("chờ chuyển khoản VNPAY");
-        } else if(order.getPaymentMethod() == PaymentMethod.COD) {
-            order.setStatus(OrderStatus.PENDING);
-            order.setPaymentNote("thanh toán khi nhận hàng");
-        }
+        if (null != order.getPaymentMethod())
+            switch (order.getPaymentMethod()) {
+                case BANKING -> {
+                    order.setStatus(OrderStatus.PENDING);
+                    order.setPaymentNote("chờ chuyển khoản ngân hàng");
+                }
+                case VNPAY -> {
+                    order.setStatus(OrderStatus.PENDING_PAYMENT);
+                    order.setPaymentNote("chờ chuyển khoản VNPAY");
+                }
+                case COD -> {
+                    order.setStatus(OrderStatus.PENDING);
+                    order.setPaymentNote("thanh toán khi nhận hàng");
+                }
+                default -> {
+                }
+            }
         order.setShippingAddress(dto.getShippingAddress());
         order.setPhone(dto.getPhone());
         order.setNote(dto.getNote());

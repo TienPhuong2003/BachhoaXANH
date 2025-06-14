@@ -42,8 +42,8 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 
             detail.setSnapshotProductId(p.getProductId());
             detail.setSnapshotProductName(p.getName());
-            detail.setSnapshotPrice(order.getTotalPrice());
             detail.setShippingFee(order.getShippingFee());
+            detail.setSnapshotPrice(detail.getTotalPrice() + detail.getShippingFee());
 
             details.add(detail);
         }

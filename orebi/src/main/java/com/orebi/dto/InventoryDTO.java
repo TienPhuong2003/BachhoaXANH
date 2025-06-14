@@ -1,31 +1,19 @@
-package com.orebi.entity;
+package com.orebi.dto;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-
-@Entity
-@Table(name = "inventory")
-public class Inventory {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class InventoryDTO {
+    private Long inventoryId;
     private String name;
-    private String address; // tên đường,khu phố,..
     private String provinceName;
     private String districtName;
+    private String address;
     private boolean isActive;
 
-    public Long getId() {
-        return id;
+    public Long getInventoryId() {
+        return inventoryId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setInventoryId(Long inventoryId) {
+        this.inventoryId = inventoryId;
     }
 
     public String getName() {
@@ -34,14 +22,6 @@ public class Inventory {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 
     public String getProvinceName() {
@@ -58,6 +38,14 @@ public class Inventory {
 
     public void setDistrictName(String districtName) {
         this.districtName = districtName;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public boolean isIsActive() {

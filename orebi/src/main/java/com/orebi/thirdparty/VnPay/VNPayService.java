@@ -13,33 +13,22 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.stereotype.Service;
 
 import com.orebi.dto.OrderDTO;
+import com.orebi.entity.Order;
 import com.orebi.entity.OrderStatus;
 import com.orebi.helper.HmacUtil;
 import com.orebi.repository.OrderRepository;
+import com.orebi.thirdparty.VnPay.config.VNPayProperties;
 
 import jakarta.transaction.Transactional;
-
-import com.orebi.entity.Order;
 
 @Service
 public class VNPayService {
 
-    @Value("${vnpay.merchant-id}")
-    private String vnpTmnCode;
-
-    @Value("${vnpay.secret-key}")
-    private String vnpHashSecret;
-
-    @Value("${vnpay.base-url}")
-    private String vnpPayUrl;
-
-    @Value("${vnpay.return-url}")
-    private String vnpReturnUrl;
+    @Autowired
+    private VNPayProperties vnProps;
 
     @Autowired
     private OrderRepository orderRepository;
@@ -61,7 +50,7 @@ public class VNPayService {
         Map<String, String> vnpParams = new HashMap<>();
         vnpParams.put("vnp_Version", vnpVersion);
         vnpParams.put("vnp_Command", vnpCommand);
-        vnpParams.put("vnp_TmnCode", vnpTmnCode);
+        vnpParams.put("vnp_TmnCode", vnProps.getMerchantId());
         vnpParams.put("vnp_Amount", vnpAmount);
         vnpParams.put("vnp_BankCode", "NCB");
         vnpParams.put("vnp_CurrCode", "VND");
@@ -69,7 +58,7 @@ public class VNPayService {
         vnpParams.put("vnp_OrderInfo", "Thanh Toan Don Hang" + order.getOrderId());
         vnpParams.put("vnp_OrderType", orderType);
         vnpParams.put("vnp_Locale", "vn");
-        vnpParams.put("vnp_ReturnUrl", vnpReturnUrl);
+        vnpParams.put("vnp_ReturnUrl", vnProps.getReturnUrl());
         vnpParams.put("vnp_IpAddr", clientIp);
         vnpParams.put("vnp_CreateDate", vnpCreateDate);
 
@@ -90,8 +79,8 @@ public class VNPayService {
         hashData.setLength(hashData.length() - 1);
         query.setLength(query.length() - 1);
 
-        String secureHash = HmacUtil.hmacSHA512(vnpHashSecret, hashData.toString());
-        return vnpPayUrl + "?" + query + "&vnp_SecureHash=" + secureHash;
+        String secureHash = HmacUtil.hmacSHA512(vnProps.getSecretKey(), hashData.toString());
+        return vnProps.getBaseUrl() + "?" + query + "&vnp_SecureHash=" + secureHash;
     }
 
     @Transactional
@@ -115,7 +104,7 @@ public class VNPayService {
         }
         data.setLength(data.length() - 1);
 
-        String computedHash = HmacUtil.hmacSHA512(vnpHashSecret, data.toString());
+        String computedHash = HmacUtil.hmacSHA512(vnProps.getSecretKey(), data.toString());
         if (!computedHash.equalsIgnoreCase(receivedHash)) {
             return Map.of("success", false, "message", "Chữ ký không hợp lệ");
         }
