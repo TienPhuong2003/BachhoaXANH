@@ -214,7 +214,7 @@ public class VNPayService {
         }
 
         result.put("orderId", orderId);
-        result.put("reasonCode", responseCode); // Cho phép frontend phân nhánh
+        result.put("reasonCode", responseCode);
         return result;
     }
 
