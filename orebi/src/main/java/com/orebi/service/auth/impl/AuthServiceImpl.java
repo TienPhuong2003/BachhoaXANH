@@ -90,6 +90,10 @@ public class AuthServiceImpl implements AuthService {
             newUser.setEmail(registerDTO.getEmail());
             newUser.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
             newUser.setPhone(registerDTO.getPhone());
+            newUser.setAddress(registerDTO.getAddress());
+            newUser.setProvince(registerDTO.getProvince());
+            newUser.setDistrict(registerDTO.getDistrict());
+            newUser.setWard(registerDTO.getWard());
             newUser.setOtpVerified(false);
 
             // Set role mặc định
