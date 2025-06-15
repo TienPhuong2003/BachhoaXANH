@@ -50,7 +50,7 @@ public class OrderServiceImpl implements OrderService {
         if (null != order.getPaymentMethod())
             switch (order.getPaymentMethod()) {
                 case BANKING -> {
-                    order.setStatus(OrderStatus.PENDING);
+                    order.setStatus(OrderStatus.PENDING_PAYMENT);
                     order.setPaymentNote("chờ chuyển khoản ngân hàng");
                 }
                 case VNPAY -> {

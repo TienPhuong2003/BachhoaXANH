@@ -12,6 +12,8 @@ public class GoShipOrderRequest {
     }
 
     public static class Shipment {
+        private String rate;
+        private int payer = 0;
         private Address address_from;
         private Address address_to;
         private Parcel parcel;
@@ -39,10 +41,29 @@ public class GoShipOrderRequest {
         public void setParcel(Parcel parcel) {
             this.parcel = parcel;
         }
+
+        public String getRate() {
+            return rate;
+        }
+
+        public void setRate(String rate) {
+            this.rate = rate;
+        }
+
+        public int getPayer() {
+            return payer;
+        }
+
+        public void setPayer(int payer) {
+            this.payer = payer;
+        }
+
     }
 
     public static class Address {
         private String name;
+        private String phone;
+        private String street;
         private String district;
         private String city;
         private String ward;
@@ -71,6 +92,30 @@ public class GoShipOrderRequest {
             this.ward = ward;
         }
 
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getPhone() {
+            return phone;
+        }
+
+        public void setPhone(String phone) {
+            this.phone = phone;
+        }
+
+        public String getStreet() {
+            return street;
+        }
+
+        public void setStreet(String street) {
+            this.street = street;
+        }
+
     }
 
     public static class Parcel {
@@ -79,7 +124,7 @@ public class GoShipOrderRequest {
         private int width = 10;
         private int height = 10;
         private int length = 10;
-        private int weight = 750;
+        private int weight = 220;
 
         public double getCod() {
             return cod;

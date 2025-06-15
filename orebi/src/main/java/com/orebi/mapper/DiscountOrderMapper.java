@@ -24,6 +24,7 @@ public class DiscountOrderMapper implements EntityMapper<DiscountOrderDTO, Disco
         dto.setType(entity.getType() != null ? entity.getType().name() : null);
         dto.setMinOrderValue(entity.getMinOrderValue());
         dto.setMaxOrderValue(entity.getMaxOrderValue());
+        dto.setPercentage(entity.isPercentage());
         dto.setQuantity(entity.getQuantity());
         return dto;
     }
@@ -44,6 +45,7 @@ public class DiscountOrderMapper implements EntityMapper<DiscountOrderDTO, Disco
             entity.setType(DiscountType.valueOf(dto.getType()));
         }
         entity.setMinOrderValue(dto.getMinOrderValue());
+        entity.setPercentage(dto.isPercentage());
         entity.setMaxOrderValue(dto.getMaxOrderValue());
         entity.setQuantity(dto.getQuantity());
         return entity;

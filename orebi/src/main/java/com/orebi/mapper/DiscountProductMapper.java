@@ -22,6 +22,7 @@ public class DiscountProductMapper implements EntityMapper<DiscountProductDTO, D
         dto.setEndDate(entity.getEndDate().toLocalDate());
         dto.setType(entity.getType() != null ? entity.getType().name() : null);
         dto.setQuantity(entity.getQuantity());
+        dto.setPercentage(entity.isPercentage());
         return dto;
     }
 
@@ -41,6 +42,7 @@ public class DiscountProductMapper implements EntityMapper<DiscountProductDTO, D
             entity.setType(DiscountType.valueOf(dto.getType()));
         }
         entity.setQuantity(dto.getQuantity());
+        entity.setPercentage(dto.isPercentage());
         return entity;
     }
 }

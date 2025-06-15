@@ -25,6 +25,7 @@ public class DiscountShipMapper implements EntityMapper<DiscountShipDTO, Discoun
         dto.setMaxShipDiscount(entity.getMaxShipDiscount());
         dto.setMinShipDiscount(entity.getMinShipDiscount());
         dto.setQuantity(entity.getQuantity());
+        dto.setPercentage(entity.isPercentage());
         return dto;
     }
 
@@ -45,6 +46,7 @@ public class DiscountShipMapper implements EntityMapper<DiscountShipDTO, Discoun
         }
         entity.setMaxShipDiscount(dto.getMaxShipDiscount());
         entity.setMinShipDiscount(dto.getMinShipDiscount());
+        entity.setPercentage(dto.isPercentage());
         entity.setQuantity(dto.getQuantity());
         return entity;
     }
