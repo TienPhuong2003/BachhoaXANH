@@ -72,6 +72,12 @@ public class GoShipService {
         return fetchDataList(url);
     }
 
+    public List<GoShipLocationDTO> getWardByDistrictCode(String cityCode) {
+        String url = properties.getBaseUrl() + "/districts/" +
+                UriUtils.encode(cityCode, StandardCharsets.UTF_8) + "/wards";
+        return fetchDataList(url);
+    }
+
     // helper
     private HttpHeaders createHeaders() {
         HttpHeaders headers = new HttpHeaders();

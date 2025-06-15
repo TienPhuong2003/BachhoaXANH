@@ -129,7 +129,8 @@ public class EmailService {
                                     <br>
                                     <p>Trân trọng,<br>Đội ngũ Orebi</p>
                                 </div>
-                            """, orderId);
+                            """,
+                    orderId);
 
             helper.setText(content, true);
             mailSender.send(message);
@@ -139,31 +140,32 @@ public class EmailService {
     }
 
     public void sendOrderCancelledEmail(String toEmail, Long orderId) {
-    try {
-        MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
-        helper.setFrom(senderEmail, senderName);
-        helper.setTo(toEmail);
-        helper.setSubject("Thông báo hủy đơn hàng #" + orderId);
+            helper.setFrom(senderEmail, senderName);
+            helper.setTo(toEmail);
+            helper.setSubject("Thông báo hủy đơn hàng #" + orderId);
 
-        String content = String.format("""
-            <div style="font-family: Arial, sans-serif; padding: 20px;">
-                <h2>Đơn hàng của bạn đã bị hủy</h2>
-                <p>Chào quý khách,</p>
-                <p>Đơn hàng <strong>#%d</strong> của bạn đã bị <strong>hủy tự động</strong> do quá thời gian thanh toán (24 giờ) qua phương thức <strong>Chuyển khoản ngân hàng</strong>.</p>
-                <p>Nếu bạn vẫn muốn đặt hàng, vui lòng xem lại ở đơn hàng và thực hiện thanh toán lại.</p>
-                <br>
-                <p>Trân trọng,<br>Đội ngũ Orebi</p>
-            </div>
-        """, orderId);
+            String content = String.format(
+                    """
+                                <div style="font-family: Arial, sans-serif; padding: 20px;">
+                                    <h2>Đơn hàng của bạn đã bị hủy</h2>
+                                    <p>Chào quý khách,</p>
+                                    <p>Đơn hàng <strong>#%d</strong> của bạn đã bị <strong>hủy tự động</strong> do quá thời gian thanh toán (24 giờ) qua phương thức <strong>Chuyển khoản ngân hàng</strong>.</p>
+                                    <p>Nếu bạn vẫn muốn đặt hàng, vui lòng xem lại ở đơn hàng và thực hiện thanh toán lại.</p>
+                                    <br>
+                                    <p>Trân trọng,<br>Đội ngũ Orebi</p>
+                                </div>
+                            """,
+                    orderId);
 
-        helper.setText(content, true);
-        mailSender.send(message);
-    } catch (Exception e) {
-        throw new RuntimeException("Lỗi gửi email hủy đơn hàng: " + e.getMessage());
+            helper.setText(content, true);
+            mailSender.send(message);
+        } catch (Exception e) {
+            throw new RuntimeException("Lỗi gửi email hủy đơn hàng: " + e.getMessage());
+        }
     }
-}
-
 
 }

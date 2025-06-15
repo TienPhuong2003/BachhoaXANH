@@ -1,5 +1,6 @@
 package com.orebi.service.inventory.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,7 +44,6 @@ public class InventoryServiceImpl implements InventoryService {
         Inventory inventory = inventoryMapper.toEntity(inventoryDTO);
         inventoryRepository.save(inventory);
         return inventoryMapper.toDTO(inventory);
-
     }
 
     @Override
@@ -143,7 +143,24 @@ public class InventoryServiceImpl implements InventoryService {
     public List<InventoryProductDTO> getProductsInInventory(Long inventoryId) {
         Inventory inventory = inventoryRepository.findById(inventoryId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy kho"));
-        return inventoryProductRepository.findByInventory(inventory);
+
+        List<InventoryProduct> inventoryProducts = inventoryProductRepository.findByInventory(inventory);
+
+        List<InventoryProductDTO> dtos = new ArrayList<>();
+        for (InventoryProduct ip : inventoryProducts) {
+            Product product = ip.getProduct();
+
+            InventoryProductDTO dto = new InventoryProductDTO();
+            dto.setId(ip.getId());
+            dto.setInventoryId(inventoryId);
+            dto.setProductName(product.getName());
+            dto.setUnit(product.getUnit());
+            dto.setPrice(product.getOriginalPrice());
+            dto.setQuantity(ip.getQuantity());
+
+            dtos.add(dto);
+        }
+        return dtos;
     }
 
     @Override
@@ -195,6 +212,10 @@ public class InventoryServiceImpl implements InventoryService {
             inventoryProductRepository.save(sourceIP);
             inventoryProductRepository.save(targetIP);
         }
+    }
+
+    public void totalProductinInventory() {
+
     }
 
 }

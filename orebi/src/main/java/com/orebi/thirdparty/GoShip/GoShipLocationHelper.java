@@ -21,6 +21,10 @@ public class GoShipLocationHelper {
         return getIdByName(goShipService.getDistrictsByCityCode(cityId), districtName);
     }
 
+    public String getWardIdByName(String districtid, String wardName) {
+        return getIdByName(goShipService.getWardByDistrictCode(districtid), wardName);
+    }
+
     private String getIdByName(List<GoShipLocationDTO> locations, String name) {
         String normalizedInput = normalize(name);
         for (GoShipLocationDTO location : locations) {

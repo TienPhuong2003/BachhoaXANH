@@ -18,6 +18,7 @@ public class InventoryMapper implements EntityMapper<InventoryDTO, Inventory> {
         dto.setAddress(entity.getAddress());
         dto.setDistrictName(entity.getDistrictName());
         dto.setProvinceName(entity.getProvinceName());
+        dto.setWardName(entity.getWardName());
         dto.setIsActive(entity.isIsActive());
         return dto;
     }
@@ -27,12 +28,13 @@ public class InventoryMapper implements EntityMapper<InventoryDTO, Inventory> {
         if (dto == null)
             return null;
         Inventory entity = new Inventory();
-        dto.setInventoryId(entity.getId());
-        dto.setName(entity.getName());
-        dto.setAddress(entity.getAddress());
-        dto.setDistrictName(entity.getDistrictName());
-        dto.setProvinceName(entity.getProvinceName());
-        dto.setIsActive(entity.isIsActive());
+        entity.setId(dto.getInventoryId());
+        entity.setName(dto.getName());
+        entity.setAddress(dto.getAddress());
+        entity.setDistrictName(dto.getDistrictName());
+        entity.setProvinceName(dto.getProvinceName());
+        entity.setWardName(dto.getWardName());
+        entity.setIsActive(dto.isIsActive());
         return entity;
     }
 }

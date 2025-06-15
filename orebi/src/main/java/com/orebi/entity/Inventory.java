@@ -18,6 +18,7 @@ public class Inventory {
     private String address; // tên đường,khu phố,..
     private String provinceName;
     private String districtName;
+    private String WardName;
     private boolean isActive;
 
     public Long getId() {
@@ -66,6 +67,14 @@ public class Inventory {
 
     public void setIsActive(boolean isActive) {
         this.isActive = isActive;
+    }
+
+    public String getWardName() {
+        return WardName;
+    }
+
+    public void setWardName(String wardName) {
+        WardName = wardName;
     }
 
 }

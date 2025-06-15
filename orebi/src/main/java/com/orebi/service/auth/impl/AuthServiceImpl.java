@@ -204,6 +204,7 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
+    @Override
     // Gửi OTP
     public ResponseEntity<?> sendOtp(String email) {
         try {
@@ -214,4 +215,5 @@ public class AuthServiceImpl implements AuthService {
                     .body(new MessageResponse("Lỗi khi gửi OTP: " + e.getMessage()));
         }
     }
+
 }

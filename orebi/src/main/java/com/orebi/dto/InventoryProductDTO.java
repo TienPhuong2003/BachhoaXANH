@@ -3,7 +3,9 @@ package com.orebi.dto;
 public class InventoryProductDTO {
     private Long id;
     private Long inventoryId;
-    private Long productId;
+    private String productName;
+    private String unit;
+    private double price;
     private int quantity;
 
     public Long getId() {
@@ -22,14 +24,6 @@ public class InventoryProductDTO {
         this.inventoryId = inventoryId;
     }
 
-    public Long getProductId() {
-        return productId;
-    }
-
-    public void setProductId(Long productId) {
-        this.productId = productId;
-    }
-
     public int getQuantity() {
         return quantity;
     }
@@ -37,4 +31,29 @@ public class InventoryProductDTO {
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
 }

@@ -20,6 +20,9 @@ public class UserMapper implements EntityMapper<UserDTO, User> {
         dto.setName(entity.getName());
         dto.setEmail(entity.getEmail());
         dto.setPhone(entity.getPhone());
+        dto.setDistrict(entity.getDistrict());
+        dto.setProvince(entity.getProvince());
+        dto.setWard(entity.getWard());
         return dto;
     }
 
@@ -35,6 +38,9 @@ public class UserMapper implements EntityMapper<UserDTO, User> {
         entity.setName(dto.getName());
         entity.setEmail(dto.getEmail());
         entity.setPhone(dto.getPhone());
+        entity.setDistrict(dto.getDistrict());
+        entity.setProvince(dto.getProvince());
+        entity.setWard(dto.getWard());
         return entity;
     }
 }

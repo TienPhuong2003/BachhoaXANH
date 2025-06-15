@@ -16,4 +16,5 @@ public interface OrderDetailService {
 
     void deleteById(Long orderDetailId);
 
+    List<OrderDetailDTO> UpdateOrderDetails(Long orderid, List<OrderDetailDTO> dtos);
 }

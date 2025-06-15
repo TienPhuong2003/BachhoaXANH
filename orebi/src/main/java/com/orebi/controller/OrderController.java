@@ -16,7 +16,6 @@ import com.orebi.helper.SecurityHelper;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
 @RestController
 @RequestMapping("/api/orders")
 public class OrderController {
@@ -38,12 +37,11 @@ public class OrderController {
     public List<OrderDTO> getAllOrders() {
         return orderService.getAllOrder();
     }
-    
+
     @GetMapping("/{status}")
     public List<OrderDTO> getMethodName(@PathVariable OrderStatus status) {
         return orderService.getOrdersByStatus(status);
     }
-    
 
     // Lấy đơn hàng theo ID
     @GetMapping("/{id}")

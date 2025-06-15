@@ -1,12 +1,18 @@
 package com.orebi.controller;
 
-import com.orebi.dto.OrderDetailDTO;
-import com.orebi.service.orderdetail.OrderDetailService;
+import java.util.List;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import com.orebi.dto.OrderDetailDTO;
+import com.orebi.service.orderdetail.OrderDetailService;
 
 @RestController
 @RequestMapping("/api/order-details")
@@ -34,5 +40,13 @@ public class OrderDetailController {
     public ResponseEntity<Void> deleteDetailById(@PathVariable Long orderDetailId) {
         orderDetailService.deleteById(orderDetailId);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/update/{orderId}")
+    public List<OrderDetailDTO> updateOrderDetails(
+            @PathVariable Long orderId,
+            @RequestBody List<OrderDetailDTO> dtos) {
+        List<OrderDetailDTO> updatedDetails = orderDetailService.UpdateOrderDetails(orderId, dtos);
+        return updatedDetails;
     }
 }

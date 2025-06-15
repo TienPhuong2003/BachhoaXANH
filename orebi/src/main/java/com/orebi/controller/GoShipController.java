@@ -37,16 +37,22 @@ public class GoShipController {
         String fromCityId = goShipLocationHelper.getProvinceIdByName(request.getShipment().getAddress_from().getCity());
         String fromDistrictId = goShipLocationHelper.getDistrictIdByName(fromCityId,
                 request.getShipment().getAddress_from().getDistrict());
+        String fromWardId = goShipLocationHelper.getWardIdByName(fromDistrictId,
+                request.getShipment().getAddress_from().getWard());
 
         String toCityId = goShipLocationHelper.getProvinceIdByName(request.getShipment().getAddress_to().getCity());
         String toDistrictId = goShipLocationHelper.getDistrictIdByName(toCityId,
                 request.getShipment().getAddress_to().getDistrict());
+        String toWardId = goShipLocationHelper.getWardIdByName(toDistrictId,
+                request.getShipment().getAddress_to().getWard());
 
         request.getShipment().getAddress_from().setCity(fromCityId);
         request.getShipment().getAddress_from().setDistrict(fromDistrictId);
+        request.getShipment().getAddress_from().setWard(fromWardId);
 
         request.getShipment().getAddress_to().setCity(toCityId);
         request.getShipment().getAddress_to().setDistrict(toDistrictId);
+        request.getShipment().getAddress_to().setWard(toWardId);
 
         return goShipService.calculateFee(request);
     }
@@ -59,5 +65,10 @@ public class GoShipController {
     @GetMapping("/districts")
     public List<GoShipLocationDTO> getDistricts(@RequestParam String citycode) {
         return goShipService.getDistrictsByCityCode(citycode);
+    }
+
+    @GetMapping("/wards")
+    public List<GoShipLocationDTO> getWards(@RequestParam String districtcode) {
+        return goShipService.getWardByDistrictCode(districtcode);
     }
 }

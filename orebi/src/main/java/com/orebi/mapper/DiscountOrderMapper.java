@@ -18,6 +18,7 @@ public class DiscountOrderMapper implements EntityMapper<DiscountOrderDTO, Disco
         dto.setCode(entity.getCode());
         dto.setDescription(entity.getDescription());
         dto.setActive(entity.isActive());
+        dto.setDiscountValue(entity.getDiscountValue());
         dto.setStartDate(entity.getStartDate().toLocalDate());
         dto.setEndDate(entity.getEndDate().toLocalDate());
         dto.setType(entity.getType() != null ? entity.getType().name() : null);
@@ -35,6 +36,7 @@ public class DiscountOrderMapper implements EntityMapper<DiscountOrderDTO, Disco
         entity.setId(dto.getId());
         entity.setCode(dto.getCode());
         entity.setDescription(dto.getDescription());
+        entity.setDiscountValue(dto.getDiscountValue());
         entity.setActive(dto.isActive());
         entity.setStartDate(dto.getStartDate().atStartOfDay());
         entity.setEndDate(dto.getEndDate().atStartOfDay());

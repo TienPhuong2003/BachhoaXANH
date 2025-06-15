@@ -1,6 +1,6 @@
 package com.orebi.thirdparty.GoShip.request;
 
-public class GoShipFeeRequest {
+public class GoShipOrderRequest {
     private Shipment shipment;
 
     public Shipment getShipment() {
@@ -42,6 +42,7 @@ public class GoShipFeeRequest {
     }
 
     public static class Address {
+        private String name;
         private String district;
         private String city;
         private String ward;
@@ -112,5 +113,4 @@ public class GoShipFeeRequest {
             return weight;
         }
     }
-
 }

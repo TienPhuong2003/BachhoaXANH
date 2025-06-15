@@ -133,4 +133,34 @@ public class OrderServiceImpl implements OrderService {
             throw new RuntimeException("Cannot cancel order with status: " + order.getStatus());
         }
     }
+
+    @Override
+    @Transactional
+    public OrderDTO updateOrder(Long orderId, OrderDTO dto) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found with id: " + orderId));
+
+        order.setShippingAddress(dto.getShippingAddress());
+        order.setPhone(dto.getPhone());
+        order.setNote(dto.getNote());
+        order.setShippingFee(dto.getShippingFee());
+        order.setRecipientName(dto.getRecipientName());
+        order.setRecipientPhone(dto.getRecipientPhone());
+        order.setPaymentMethod(dto.getPaymentMethod());
+        order.setVnpayTransactionNo(dto.getVnpayTransactionNo());
+        order.setBankTransferImage(dto.getBankTransferImage());
+        order.setIsPaid(dto.isPaid());
+        order.setPaymentNote(dto.getPaymentNote());
+
+        if (dto.getStatus() != null) {
+            order.setStatus(dto.getStatus());
+        }
+
+        order.setUpdatedAt(LocalDateTime.now());
+
+        orderRepository.save(order);
+
+        return orderMapper.toDTO(order);
+    }
+
 }

@@ -1,9 +1,7 @@
 package com.orebi.controller;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -14,15 +12,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.orebi.dto.OrderDTO;
-import com.orebi.entity.Cart;
-import com.orebi.entity.LineItem;
+import com.orebi.entity.OrderStatus;
 import com.orebi.entity.PaymentMethod;
-import com.orebi.entity.User;
 import com.orebi.service.bank.BankService;
 import com.orebi.service.order.OrderService;
 import com.orebi.thirdparty.VnPay.VNPayService;
-import com.orebi.entity.OrderStatus;
-
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -52,7 +46,7 @@ public class PaymentController {
                 return ResponseEntity.badRequest().body(Map.of("error", "Phương thức thanh toán không hợp lệ"));
             }
 
-            if (order.getStatus() != OrderStatus.PENDING_PAYMENT || order.getStatus() != OrderStatus.CANCELLED) {
+            if (order.getStatus() != OrderStatus.PENDING_PAYMENT && order.getStatus() != OrderStatus.CANCELLED) {
                 return ResponseEntity.badRequest().body(Map.of("error", "Đơn hàng không ở trạng thái chờ thanh toán"));
             }
 
@@ -93,9 +87,8 @@ public class PaymentController {
             bankService.confirmBankTransfer(orderId);
             return ResponseEntity.ok(Map.of("message", "Xác nhận chuyển khoản ngân hàng thành công"));
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(Map.of("error", "Không thể xác nhận chuyển khoản ngân hàng"));
+            return ResponseEntity.internalServerError()
+                    .body(Map.of("error", "Không thể xác nhận chuyển khoản ngân hàng"));
         }
     }
 }
-
-

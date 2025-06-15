@@ -5,6 +5,7 @@ public class InventoryDTO {
     private String name;
     private String provinceName;
     private String districtName;
+    private String WardName;
     private String address;
     private boolean isActive;
 
@@ -54,6 +55,14 @@ public class InventoryDTO {
 
     public void setIsActive(boolean isActive) {
         this.isActive = isActive;
+    }
+
+    public String getWardName() {
+        return WardName;
+    }
+
+    public void setWardName(String wardName) {
+        WardName = wardName;
     }
 
 }

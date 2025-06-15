@@ -6,10 +6,10 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import com.orebi.dto.UserDTO;
 import com.orebi.entity.Order;
 import com.orebi.entity.OrderStatus;
 import com.orebi.entity.PaymentMethod;
-import com.orebi.dto.UserDTO;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
@@ -26,4 +26,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
                         LocalDateTime cutoff);
 
         List<Order> findByStatus(OrderStatus status);
+
+        Order findByOrderId(Long orderId);
 }

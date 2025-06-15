@@ -15,6 +15,7 @@ public class DiscountProductMapper implements EntityMapper<DiscountProductDTO, D
         DiscountProductDTO dto = new DiscountProductDTO();
         dto.setId(entity.getId());
         dto.setCode(entity.getCode());
+        dto.setDiscountValue(entity.getDiscountValue());
         dto.setDescription(entity.getDescription());
         dto.setActive(entity.isActive());
         dto.setStartDate(entity.getStartDate().toLocalDate());
@@ -32,6 +33,7 @@ public class DiscountProductMapper implements EntityMapper<DiscountProductDTO, D
         entity.setId(dto.getId());
         entity.setCode(dto.getCode());
         entity.setDescription(dto.getDescription());
+        entity.setDiscountValue(dto.getDiscountValue());
         entity.setActive(dto.isActive());
         entity.setStartDate(dto.getStartDate().atStartOfDay());
         entity.setEndDate(dto.getEndDate().atStartOfDay());

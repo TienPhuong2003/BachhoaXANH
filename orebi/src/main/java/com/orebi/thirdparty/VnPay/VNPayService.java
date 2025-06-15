@@ -140,7 +140,7 @@ public class VNPayService {
             case "00":
                 order.setIsPaid(true);
                 order.setVnpayTransactionNo(transactionNo);
-                order.setStatus(OrderStatus.PENDING_PAYMENT);
+                order.setStatus(OrderStatus.COMPLETED);
                 order.setUpdatedAt(LocalDateTime.now());
                 orderRepository.save(order);
                 result.put("success", true);
