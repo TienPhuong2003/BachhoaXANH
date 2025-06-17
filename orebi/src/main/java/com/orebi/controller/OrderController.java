@@ -4,17 +4,21 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.orebi.dto.OrderDTO;
 import com.orebi.dto.UserDTO;
 import com.orebi.entity.OrderStatus;
+import com.orebi.helper.SecurityHelper;
 import com.orebi.service.cart.CartService;
 import com.orebi.service.order.OrderService;
 import com.orebi.service.user.UserService;
-import com.orebi.helper.SecurityHelper;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -38,20 +42,11 @@ public class OrderController {
         return orderService.getAllOrder();
     }
 
-    @GetMapping("/{status}")
-    public List<OrderDTO> getMethodName(@PathVariable OrderStatus status) {
-        return orderService.getOrdersByStatus(status);
-    }
-
     // Lấy đơn hàng theo ID
     @GetMapping("/{id}")
     public ResponseEntity<?> getOrderById(@PathVariable Long id) {
-        try {
-            OrderDTO order = orderService.getOrderById(id);
-            return ResponseEntity.ok(order);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+        OrderDTO order = orderService.getOrderById(id);
+        return ResponseEntity.ok(order);
     }
 
     // Lấy danh sách đơn hàng của user hiện tại
@@ -72,7 +67,7 @@ public class OrderController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @PostMapping("/{id}")
     public ResponseEntity<?> cancelOrder(@PathVariable Long id) {
         try {
             orderService.cancelOrder(id);

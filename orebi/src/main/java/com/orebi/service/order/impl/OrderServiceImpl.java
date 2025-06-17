@@ -96,7 +96,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderDTO> getOrdersByUser(UserDTO user) {
-        List<Order> orders = orderRepository.findByUserOrderByOrderDateDesc(user);
+        List<Order> orders = orderRepository.findByUser_UserIdOrderByOrderDateDesc(user.getUserId());
         return orders.stream()
                 .map(orderMapper::toDTO)
                 .toList();

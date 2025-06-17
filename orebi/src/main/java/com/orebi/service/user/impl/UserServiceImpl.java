@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.orebi.dto.UserDTO;
 import com.orebi.entity.User;
 import com.orebi.mapper.UserMapper;
+import com.orebi.repository.CartRepository;
 import com.orebi.repository.UserRepository;
 import com.orebi.service.user.UserService;
 
@@ -19,10 +20,12 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final CartRepository cartRepository;
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper) {
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, CartRepository cartRepository) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.cartRepository = cartRepository;
     }
 
     @Override
@@ -79,6 +82,8 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void deleteUser(Long userId) {
+        cartRepository.findByUser_UserId(userId)
+                .ifPresent(cart -> cartRepository.delete(cart));
         userRepository.deleteById(userId);
     }
 }
